@@ -42,7 +42,7 @@ export function Sidebar() {
 
       {/* Logo */}
       <div className="flex items-center gap-2 px-3 py-4 shrink-0">
-        <img src="/icon.png" alt="LifeBook" className="w-6 h-6 rounded-md shrink-0 object-cover" />
+        <img src="/icon.svg" alt="LifeBook" className="w-6 h-6 rounded-md shrink-0" />
         <span className="hidden md:block text-[12px] font-medium text-white/50 tracking-tight">
           LifeBook
         </span>

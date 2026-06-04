@@ -1,0 +1,28 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgA" x1="25%" y1="0%" x2="75%" y2="100%">
+      <stop offset="0%" stop-color="#FF4B7A"/>
+      <stop offset="100%" stop-color="#C0144E"/>
+    </linearGradient>
+    <linearGradient id="shineA" x1="0%" y1="0%" x2="55%" y2="80%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.13"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle background -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bgA)"/>
+  <rect width="1024" height="1024" rx="224" fill="url(#shineA)"/>
+
+  <!-- Left page -->
+  <path d="M 512 212 L 226 256 L 222 762 Q 222 778 238 780 L 512 744 Z" fill="white"/>
+  <!-- Right page (slightly dimmer for depth) -->
+  <path d="M 512 212 L 798 256 L 802 762 Q 802 778 786 780 L 512 744 Z" fill="white" opacity="0.88"/>
+  <!-- Page-fan at bottom -->
+  <path d="M 238 780 Q 512 822 786 780 Q 512 834 238 780 Z" fill="white" opacity="0.55"/>
+  <!-- Spine -->
+  <rect x="506" y="212" width="12" height="532" rx="6" fill="white" opacity="0.22"/>
+  <!-- Two text lines on right page -->
+  <line x1="560" y1="462" x2="768" y2="462" stroke="#C0144E" stroke-width="22" stroke-linecap="round" opacity="0.42"/>
+  <line x1="560" y1="520" x2="732" y2="520" stroke="#C0144E" stroke-width="22" stroke-linecap="round" opacity="0.42"/>
+</svg>
