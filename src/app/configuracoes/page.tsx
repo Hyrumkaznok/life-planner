@@ -201,7 +201,7 @@ export default function ConfiguracoesPage() {
               <Calendar className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="font-bold text-slate-900 dark:text-[var(--foreground)]">Life Planner</p>
+              <p className="font-bold text-slate-900 dark:text-[var(--foreground)]">LifeBook</p>
               <p className="text-xs text-slate-400">Versão 1.0.0 MVP</p>
             </div>
           </div>

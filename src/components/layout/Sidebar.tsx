@@ -46,7 +46,7 @@ export function Sidebar() {
           <Layers size={13} className="text-[#C4B5FD]" strokeWidth={1.5} />
         </div>
         <span className="hidden md:block text-[12px] font-medium text-white/50 tracking-tight">
-          Life Planner
+          LifeBook
         </span>
       </div>
 

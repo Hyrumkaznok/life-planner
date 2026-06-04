@@ -9,7 +9,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           <Layers size={16} className="text-[var(--background)]" strokeWidth={1.5} />
         </div>
         <span className="text-[var(--foreground)] font-semibold text-lg tracking-tight">
-          Life Planner
+          LifeBook
         </span>
       </Link>
       {children}

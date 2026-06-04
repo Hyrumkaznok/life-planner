@@ -7,7 +7,7 @@ import { LayoutShell } from "@/components/layout/LayoutShell";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "Life Planner",
+  title: "LifeBook",
   description: "Seu planejador de vida pessoal",
 };
 
