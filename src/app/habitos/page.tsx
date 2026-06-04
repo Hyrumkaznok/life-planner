@@ -15,6 +15,7 @@ import { format, subDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const WEEK_DAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
@@ -107,6 +108,7 @@ export default function HabitosPage() {
   const CATEGORY_MAP = useCategoryMap();
   const [showForm, setShowForm] = useState(false);
   const [editingHabit, setEditingHabit] = useState<Habit | undefined>();
+  const [deletingHabitId, setDeletingHabitId] = useState<string | null>(null);
 
   const today = format(new Date(), "yyyy-MM-dd");
   const todayDOW = new Date().getDay();
@@ -254,7 +256,7 @@ export default function HabitosPage() {
                         className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
                         <Pencil className="w-3.5 h-3.5" />
                       </button>
-                      <button onClick={() => { deleteHabit(habit.id); toast.success("Hábito excluído."); }}
+                      <button onClick={() => setDeletingHabitId(habit.id)}
                         className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -270,6 +272,17 @@ export default function HabitosPage() {
       <HabitFormDialog key={editingHabit?.id ?? "new"} open={showForm}
         onClose={() => { setShowForm(false); setEditingHabit(undefined); }}
         editHabit={editingHabit} />
+
+      <ConfirmDialog
+        open={deletingHabitId !== null}
+        title="Excluir hábito"
+        description={`Tem certeza que deseja excluir "${habits.find(h => h.id === deletingHabitId)?.name}"? Esta ação não pode ser desfeita.`}
+        onConfirm={() => {
+          if (deletingHabitId) { deleteHabit(deletingHabitId); toast.success("Hábito excluído."); }
+          setDeletingHabitId(null);
+        }}
+        onCancel={() => setDeletingHabitId(null)}
+      />
     </div>
   );
 }

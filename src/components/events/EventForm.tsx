@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -52,8 +53,9 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
   const [description, setDescription] = useState(editEvent?.description ?? "");
   const [location, setLocation]     = useState(editEvent?.location ?? "");
   const [recurrence, setRecurrence] = useState<RecurrenceType>(editEvent?.recurrence ?? "none");
-  const [confirmed, setConfirmed]   = useState(editEvent?.confirmed ?? true);
-  const [completed, setCompleted]   = useState(editEvent?.completed ?? false);
+  const [confirmed, setConfirmed]     = useState(editEvent?.confirmed ?? true);
+  const [completed, setCompleted]     = useState(editEvent?.completed ?? false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   // When start changes, push end forward if needed
   const handleStartChange = (t: string) => {
@@ -71,6 +73,12 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
   const handleSave = () => {
     if (!title.trim() || !date) {
       toast.error("Preencha o título e a data do evento.");
+      return;
+    }
+    const [sh, sm] = startTime.split(":").map(Number);
+    const [eh, em] = endTime.split(":").map(Number);
+    if (sh * 60 + sm >= eh * 60 + em) {
+      toast.error("O horário de fim deve ser após o horário de início.");
       return;
     }
     const data = {
@@ -99,6 +107,7 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
     if (editEvent) {
       deleteEvent(editEvent.id);
       toast.success("Evento excluído.");
+      setConfirmingDelete(false);
       onClose();
     }
   };
@@ -273,7 +282,7 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
 
         <DialogFooter className="flex-col sm:flex-row gap-2 pt-2">
           {editEvent && (
-            <Button variant="destructive" onClick={handleDelete} className="sm:mr-auto">
+            <Button variant="destructive" onClick={() => setConfirmingDelete(true)} className="sm:mr-auto">
               Excluir
             </Button>
           )}
@@ -286,6 +295,14 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
           </Button>
         </DialogFooter>
       </DialogContent>
+
+      <ConfirmDialog
+        open={confirmingDelete}
+        title="Excluir evento"
+        description={`Tem certeza que deseja excluir "${editEvent?.title}"? Esta ação não pode ser desfeita.`}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </Dialog>
   );
 }

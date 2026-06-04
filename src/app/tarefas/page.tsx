@@ -14,6 +14,7 @@ import { Plus, CheckCircle2, Circle, AlertCircle, Trash2, Pencil, Filter, Clipbo
 import { format, parseISO } from "date-fns";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const PRIORITY_CONFIG: Record<TaskPriority, { label: string; dot: string; badge: string }> = {
   high:   { label: "Alta",  dot: "bg-red-500",   badge: "text-red-600 bg-red-50 border border-red-100" },
@@ -213,6 +214,7 @@ export default function TarefasPage() {
   const CATEGORY_MAP = useCategoryMap();
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | undefined>();
+  const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<TaskStatus | "all">("all");
   const [filterPriority, setFilterPriority] = useState<TaskPriority | "all">("all");
 
@@ -238,7 +240,11 @@ export default function TarefasPage() {
   };
 
   const handleEdit = (task: Task) => { setEditingTask(task); setShowForm(true); };
-  const handleDelete = (id: string) => { deleteTask(id); toast.success("Tarefa excluída."); };
+  const handleDelete = (id: string) => { setDeletingTaskId(id); };
+  const confirmDelete = () => {
+    if (deletingTaskId) { deleteTask(deletingTaskId); toast.success("Tarefa excluída."); }
+    setDeletingTaskId(null);
+  };
 
   const shared = { today, categoryMap: CATEGORY_MAP, onToggle: handleToggle, onEdit: handleEdit, onDelete: handleDelete };
 
@@ -312,6 +318,14 @@ export default function TarefasPage() {
       <TaskFormDialog key={editingTask?.id ?? "new"} open={showForm}
         onClose={() => { setShowForm(false); setEditingTask(undefined); }}
         editTask={editingTask} />
+
+      <ConfirmDialog
+        open={deletingTaskId !== null}
+        title="Excluir tarefa"
+        description={`Tem certeza que deseja excluir "${tasks.find(t => t.id === deletingTaskId)?.title}"? Esta ação não pode ser desfeita.`}
+        onConfirm={confirmDelete}
+        onCancel={() => setDeletingTaskId(null)}
+      />
     </div>
   );
 }

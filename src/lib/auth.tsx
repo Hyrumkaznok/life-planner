@@ -9,11 +9,11 @@ interface AuthContextValue {
   user: AuthUser | null;
   session: AuthSession | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<string | null>;
-  signUp: (email: string, password: string, name: string, surname?: string) => Promise<string | null>;
+  signIn: (email: string, password: string, redirectTo?: string) => Promise<string | null>;
+  signUp: (email: string, password: string, name: string, surname?: string, redirectTo?: string) => Promise<string | null>;
   signOut: () => Promise<void>;
-  signInWithGoogle: () => Promise<string | null>;
-  signInWithGitHub: () => Promise<string | null>;
+  signInWithGoogle: (redirectTo?: string) => Promise<string | null>;
+  signInWithGitHub: (redirectTo?: string) => Promise<string | null>;
   sendPasswordReset: (email: string) => Promise<string | null>;
   resetPassword: (token: string, password: string) => Promise<string | null>;
 }
@@ -32,20 +32,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const signIn = useCallback(async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string, redirectTo?: string) => {
     const result = await authService.signIn({ email, password });
     if (result.session) {
       setSession(result.session);
-      router.push('/');
+      router.push(redirectTo ?? '/');
     }
     return result.error;
   }, [router]);
 
-  const signUp = useCallback(async (email: string, password: string, name: string, surname?: string) => {
+  const signUp = useCallback(async (email: string, password: string, name: string, surname?: string, redirectTo?: string) => {
     const result = await authService.signUp({ email, password, name, surname });
     if (result.session) {
       setSession(result.session);
-      router.push('/');
+      router.push(redirectTo ?? '/');
     }
     return result.error;
   }, [router]);
@@ -56,20 +56,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/login');
   }, [router]);
 
-  const signInWithGoogle = useCallback(async () => {
+  const signInWithGoogle = useCallback(async (redirectTo?: string) => {
     const result = await authService.signInWithGoogle();
     if (result.session) {
       setSession(result.session);
-      router.push('/');
+      router.push(redirectTo ?? '/');
     }
     return result.error;
   }, [router]);
 
-  const signInWithGitHub = useCallback(async () => {
+  const signInWithGitHub = useCallback(async (redirectTo?: string) => {
     const result = await authService.signInWithGitHub();
     if (result.session) {
       setSession(result.session);
-      router.push('/');
+      router.push(redirectTo ?? '/');
     }
     return result.error;
   }, [router]);

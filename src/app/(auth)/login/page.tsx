@@ -22,14 +22,14 @@ function LoginForm() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const err = await signIn(email, password);
+    const err = await signIn(email, password, redirectTo);
     if (err) { setError(err); setLoading(false); }
   };
 
   const handleGoogle = async () => {
     setError(null);
     setGoogleLoading(true);
-    const err = await signInWithGoogle();
+    const err = await signInWithGoogle(redirectTo);
     if (err) { setError(err); setGoogleLoading(false); }
   };
 

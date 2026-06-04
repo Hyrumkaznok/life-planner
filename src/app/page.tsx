@@ -26,7 +26,7 @@ const statusIcon = {
 };
 
 export default function DashboardPage() {
-  const { events, tasks, habits } = useAppStore();
+  const { events, tasks, habits, updateEvent } = useAppStore();
   const CATEGORY_MAP = useCategoryMap();
   const [showEventForm, setShowEventForm] = useState(false);
 
@@ -44,7 +44,7 @@ export default function DashboardPage() {
   const completedCount  = tasks.filter((t) => t.status === "completed").length;
   const todayHabits     = habits.filter((h) => h.targetDays.includes(new Date().getDay()));
   const completedHabits = todayHabits.filter((h) => h.completedDates.includes(today));
-  const bestStreak      = Math.max(...habits.map((h) => h.streak), 0);
+  const bestStreak      = habits.reduce((max, h) => Math.max(max, h.streak), 0);
   const highPriTasks    = pendingTasks.filter((t) => t.priority === "high");
 
   const stats = [
@@ -112,16 +112,27 @@ export default function DashboardPage() {
                 {todayEvents.map((event, i) => {
                   const cat = CATEGORY_MAP[event.categoryId];
                   if (!cat) return null;
+                  const isCompleted = !!event.completed;
                   return (
                     <div key={event.id}
-                      className={`flex items-center gap-3.5 px-5 py-3 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors duration-100 ${i !== todayEvents.length - 1 ? "border-b border-[var(--border)]" : ""}`}>
+                      className={`flex items-center gap-3.5 px-5 py-3 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors duration-100 ${i !== todayEvents.length - 1 ? "border-b border-[var(--border)]" : ""} ${isCompleted ? "opacity-60" : ""}`}>
+                      <button
+                        onClick={() => updateEvent(event.id, { completed: !isCompleted })}
+                        className="shrink-0 transition-transform hover:scale-110"
+                        aria-label={isCompleted ? "Marcar como pendente" : "Marcar como concluído"}
+                      >
+                        {isCompleted
+                          ? <CheckCircle2 size={16} className="text-emerald-500" strokeWidth={1.5} />
+                          : <Circle size={16} className="text-[var(--muted-foreground)]" strokeWidth={1.5} />
+                        }
+                      </button>
                       <div className="text-right w-11 shrink-0">
-                        <p className="text-[12px] font-semibold text-[var(--foreground)] tabular-nums">{event.startTime}</p>
+                        <p className={`text-[12px] font-semibold tabular-nums ${isCompleted ? "text-[var(--muted-foreground)]" : "text-[var(--foreground)]"}`}>{event.startTime}</p>
                         <p className="text-[10px] text-[var(--muted-foreground)] tabular-nums">{event.endTime}</p>
                       </div>
                       <div className="w-[2px] h-7 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[13px] font-medium text-[var(--foreground)] truncate">{event.title}</p>
+                        <p className={`text-[13px] font-medium truncate ${isCompleted ? "line-through text-[var(--muted-foreground)]" : "text-[var(--foreground)]"}`}>{event.title}</p>
                         <div className="flex items-center gap-1.5 mt-0.5">
                           <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
                           <span className="text-[10px] text-[var(--muted-foreground)]">{cat.name}</span>

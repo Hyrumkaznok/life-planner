@@ -42,7 +42,7 @@ export default function EstatisticasPage() {
   const last7DaysCompletions = habits.reduce(
     (sum, h) => sum + h.completedDates.filter((d) => last7DaysDates.includes(d)).length, 0
   );
-  const bestStreak = Math.max(...habits.map((h) => h.streak), 0);
+  const bestStreak = habits.reduce((max, h) => Math.max(max, h.streak), 0);
   const todayEvents = events.filter((e) => e.date === today).length;
   const thisWeekEvents = events.filter((e) => e.date >= thisWeekStart && e.date <= thisWeekEnd).length;
 

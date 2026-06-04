@@ -245,7 +245,16 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
                 onClick={(e) => { e.stopPropagation(); if (!isDragging) onEventClick(event); }}
               >
                 <div className="flex items-center gap-1.5 min-w-0">
-                  {isCompleted && <CheckCircle2 size={12} style={{ color: cat.color, opacity: 0.8, flexShrink: 0 }} />}
+                  <button
+                    onClick={(e) => { e.stopPropagation(); updateEvent(event.id, { completed: !isCompleted }); }}
+                    className="shrink-0 hover:scale-110 transition-transform"
+                    aria-label={isCompleted ? "Marcar como pendente" : "Marcar como concluído"}
+                  >
+                    <CheckCircle2
+                      size={12}
+                      style={{ color: cat.color, opacity: isCompleted ? 0.9 : 0.35, flexShrink: 0 }}
+                    />
+                  </button>
                   <p className={`text-sm font-bold truncate ${isCompleted ? "line-through" : ""}`} style={{ color: cat.color }}>
                     {event.title}
                   </p>
