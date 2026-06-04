@@ -111,7 +111,7 @@ function CategoryManager() {
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={handleAdd} size="sm" className="bg-gradient-to-r from-rose-500 to-pink-600 text-white border-0 text-xs">
+              <Button onClick={handleAdd} size="sm" className="bg-gradient-to-r bg-indigo-500 text-white border-0 text-xs">
                 Criar categoria
               </Button>
               <Button onClick={() => { setAdding(false); setName(""); }} variant="outline" size="sm" className="text-xs">
@@ -197,7 +197,7 @@ export default function ConfiguracoesPage() {
         {/* Sobre */}
         <Section icon={<Sparkles className="w-4 h-4 text-rose-500" />} title="Sobre o App">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg shadow-rose-200">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br bg-indigo-500 flex items-center justify-center shadow-lg shadow-rose-200">
               <Calendar className="w-6 h-6 text-white" />
             </div>
             <div>

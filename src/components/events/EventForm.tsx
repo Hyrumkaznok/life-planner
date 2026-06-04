@@ -249,7 +249,7 @@ export function EventForm({ open, onClose, initialDate, editEvent }: EventFormPr
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
           <Button
             onClick={handleSave}
-            className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white border-0"
+            className="bg-gradient-to-r bg-indigo-500 hover:hover:bg-indigo-600 text-white border-0"
           >
             Salvar
           </Button>

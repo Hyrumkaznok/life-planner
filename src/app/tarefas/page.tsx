@@ -116,7 +116,7 @@ function TaskFormDialog({ open, onClose, editTask }: { open: boolean; onClose: (
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-gradient-to-r from-rose-500 to-pink-600 text-white border-0">Salvar</Button>
+          <Button onClick={handleSave} className="bg-gradient-to-r bg-indigo-500 text-white border-0">Salvar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -247,7 +247,7 @@ export default function TarefasPage() {
     <div className="min-h-full">
       <PageHeader title="Tarefas" subtitle="Gerencie e acompanhe suas tarefas">
         <Button onClick={() => { setEditingTask(undefined); setShowForm(true); }}
-          className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white border-0 shadow-sm"
+          className="bg-gradient-to-r bg-indigo-500 hover:hover:bg-indigo-600 text-white border-0 shadow-sm"
           size="sm">
           <Plus className="w-4 h-4 mr-1" /> Nova Tarefa
         </Button>

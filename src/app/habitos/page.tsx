@@ -85,7 +85,7 @@ function HabitFormDialog({ open, onClose, editHabit }: { open: boolean; onClose:
                 <button key={i} onClick={() => toggleDay(i)}
                   className={cn("flex-1 h-9 rounded-xl text-xs font-semibold border transition-all",
                     targetDays.includes(i)
-                      ? "bg-gradient-to-br from-rose-500 to-pink-600 text-white border-rose-500 shadow-sm"
+                      ? "bg-gradient-to-br bg-indigo-500 text-white border-rose-500 shadow-sm"
                       : "bg-white text-slate-500 border-slate-200 hover:border-rose-300")}>
                   {label}
                 </button>
@@ -95,7 +95,7 @@ function HabitFormDialog({ open, onClose, editHabit }: { open: boolean; onClose:
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-gradient-to-r from-rose-500 to-pink-600 text-white border-0">Salvar</Button>
+          <Button onClick={handleSave} className="bg-gradient-to-r bg-indigo-500 text-white border-0">Salvar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -124,7 +124,7 @@ export default function HabitosPage() {
     <div className="min-h-full">
       <PageHeader title="Hábitos" subtitle="Construa rotinas consistentes dia após dia">
         <Button onClick={() => { setEditingHabit(undefined); setShowForm(true); }}
-          className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white border-0 shadow-sm"
+          className="bg-gradient-to-r bg-indigo-500 hover:hover:bg-indigo-600 text-white border-0 shadow-sm"
           size="sm">
           <Plus className="w-4 h-4 mr-1" /> Novo Hábito
         </Button>

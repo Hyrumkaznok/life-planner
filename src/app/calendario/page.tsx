@@ -78,7 +78,7 @@ function QuickTaskDialog({ open, onClose }: { open: boolean; onClose: () => void
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-rose-600 hover:bg-rose-700 text-white">Criar</Button>
+          <Button onClick={handleSave} className="bg-indigo-500 hover:bg-indigo-600 text-white">Criar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -153,7 +153,7 @@ function QuickHabitDialog({ open, onClose }: { open: boolean; onClose: () => voi
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-rose-600 hover:bg-rose-700 text-white">Criar</Button>
+          <Button onClick={handleSave} className="bg-indigo-500 hover:bg-indigo-600 text-white">Criar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -195,7 +195,7 @@ export default function CalendarioPage() {
         </Tabs>
         <Button
           onClick={() => { setEditingEvent(undefined); setShowEventForm(true); }}
-          className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white shadow-sm border-0"
+          className="bg-gradient-to-r bg-indigo-500 hover:hover:bg-indigo-600 text-white shadow-sm border-0"
           size="sm"
         >
           <Plus className="w-4 h-4 mr-1" />
