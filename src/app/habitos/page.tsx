@@ -130,31 +130,31 @@ export default function HabitosPage() {
         </Button>
       </PageHeader>
 
-      <div className="p-7 space-y-6">
-        {/* Daily progress hero */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-zinc-700 to-zinc-900 rounded-2xl p-6 text-white shadow-elevated">
+      <div className="p-4 sm:p-7 space-y-4 sm:space-y-6">
+        {/* Daily progress hero — responsivo */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-zinc-700 to-zinc-900 rounded-2xl p-5 sm:p-6 text-white shadow-elevated">
           <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/5 rounded-full" />
           <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-white/5 rounded-full" />
-          <div className="relative flex items-center justify-between">
-            <div>
-              <p className="text-zinc-300 text-sm mb-1 capitalize">
+          <div className="relative flex items-center gap-4 justify-between">
+            <div className="flex-1 min-w-0">
+              <p className="text-zinc-300 text-xs sm:text-sm mb-1 capitalize truncate">
                 {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
               </p>
-              <p className="text-4xl font-bold">{progress}%</p>
-              <p className="text-zinc-300 text-sm mt-1">
+              <p className="text-3xl sm:text-4xl font-bold">{progress}%</p>
+              <p className="text-zinc-300 text-xs sm:text-sm mt-1">
                 {completedToday.length} de {todayHabits.length} hábitos realizados
               </p>
             </div>
-            <div className="w-20 h-20 relative flex items-center justify-center">
-              <svg className="w-20 h-20 -rotate-90" viewBox="0 0 36 36">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 relative flex items-center justify-center shrink-0">
+              <svg className="w-16 h-16 sm:w-20 sm:h-20 -rotate-90" viewBox="0 0 36 36">
                 <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="3" />
                 <circle cx="18" cy="18" r="15.9" fill="none" stroke="white" strokeWidth="3"
                   strokeDasharray={`${progress} ${100 - progress}`} strokeLinecap="round" />
               </svg>
-              <Target className="absolute w-6 h-6 text-white/90" />
+              <Target className="absolute w-5 h-5 sm:w-6 sm:h-6 text-white/90" />
             </div>
           </div>
-          <div className="relative mt-4">
+          <div className="relative mt-3 sm:mt-4">
             <Progress value={progress} className="h-1.5 bg-white/20 [&>div]:bg-white" />
           </div>
         </div>
@@ -248,7 +248,8 @@ export default function HabitosPage() {
                       </div>
                     </div>
 
-                    <div className="flex gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {/* md:opacity-0 → oculto no desktop até hover; sempre visível no mobile */}
+                    <div className="flex gap-0.5 shrink-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                       <button onClick={() => { setEditingHabit(habit); setShowForm(true); }}
                         className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
                         <Pencil className="w-3.5 h-3.5" />

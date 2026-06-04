@@ -59,7 +59,7 @@ export default function DashboardPage() {
     <div className="min-h-full bg-[var(--background)]">
 
       {/* ── Header ────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-8 py-5 bg-[var(--card)] dark:bg-[#18181B] border-b border-[var(--border)]">
+      <div className="flex items-center justify-between px-4 py-3.5 sm:px-8 sm:py-5 bg-[var(--card)] dark:bg-[#18181B] border-b border-[var(--border)]">
         <div>
           <p className="text-[11px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest mb-0.5">
             {dateCapital}
@@ -77,21 +77,21 @@ export default function DashboardPage() {
         </Button>
       </div>
 
-      {/* ── Stats strip ───────────────────────────────────────────────── */}
-      <div className="flex items-stretch bg-[var(--card)] dark:bg-[#18181B] border-b border-[var(--border)]">
+      {/* ── Stats strip — scroll horizontal em mobile ─────────────────── */}
+      <div className="flex overflow-x-auto scrollbar-none bg-[var(--card)] dark:bg-[#18181B] border-b border-[var(--border)]">
         {stats.map(({ icon: Icon, color, label, value, href }, i) => (
-          <Link key={href} href={href} className="flex-1 group">
-            <div className={`flex flex-col px-6 py-4 ${i !== 0 ? "border-l border-[var(--border)]" : ""} hover:bg-[var(--secondary)] dark:hover:bg-[#27272A] transition-colors duration-150`}>
+          <Link key={href} href={href} className="flex-none min-w-[90px] group">
+            <div className={`flex flex-col px-4 sm:px-6 py-3 sm:py-4 ${i !== 0 ? "border-l border-[var(--border)]" : ""} hover:bg-[var(--secondary)] dark:hover:bg-[#27272A] transition-colors duration-150`}>
               <Icon size={14} className={`${color} mb-2`} strokeWidth={1.5} />
-              <span className="text-[19px] font-semibold text-[var(--foreground)] leading-none">{value}</span>
-              <span className="text-[11px] text-[var(--muted-foreground)] mt-1 font-normal">{label}</span>
+              <span className="text-[17px] sm:text-[19px] font-semibold text-[var(--foreground)] leading-none">{value}</span>
+              <span className="text-[10px] sm:text-[11px] text-[var(--muted-foreground)] mt-1 font-normal">{label}</span>
             </div>
           </Link>
         ))}
       </div>
 
       {/* ── Content ───────────────────────────────────────────────────── */}
-      <div className="px-8 py-6 space-y-6">
+      <div className="px-4 py-4 sm:px-8 sm:py-6 space-y-4 sm:space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
 
           {/* Today */}

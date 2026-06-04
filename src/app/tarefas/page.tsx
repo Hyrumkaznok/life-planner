@@ -168,7 +168,8 @@ function TaskCard({ task, today, categoryMap, onToggle, onEdit, onDelete }: Task
             )}
           </div>
         </div>
-        <div className="flex gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        {/* md:opacity-0 → oculto no desktop até hover; sempre visível no mobile */}
+        <div className="flex gap-0.5 shrink-0 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
           <button onClick={() => onEdit(task)}
             className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors">
             <Pencil className="w-3.5 h-3.5" />
@@ -253,23 +254,27 @@ export default function TarefasPage() {
         </Button>
       </PageHeader>
 
-      {/* Stats bar */}
-      <div className="flex items-center gap-6 px-7 py-3.5 bg-white border-b border-slate-100">
-        {[
-          { label: "Total", value: tasks.length, color: "text-slate-700" },
-          { label: "Pendentes", value: tasks.filter((t) => t.status === "pending").length, color: "text-amber-600" },
-          { label: "Em andamento", value: tasks.filter((t) => t.status === "in_progress").length, color: "text-blue-600" },
-          { label: "Concluídas", value: completedCount, color: "text-emerald-600" },
-        ].map(({ label, value, color }) => (
-          <div key={label} className="flex items-center gap-1.5">
-            <span className={cn("text-lg font-bold", color)}>{value}</span>
-            <span className="text-xs text-slate-400">{label}</span>
-          </div>
-        ))}
-        <div className="ml-auto flex items-center gap-2">
-          <Filter className="w-3.5 h-3.5 text-slate-400" />
+      {/* Stats + Filtros — responsivo */}
+      <div className="bg-white dark:bg-[#18181B] border-b border-slate-100 dark:border-[var(--border)]">
+        {/* Stats scroll horizontal no mobile */}
+        <div className="flex items-center gap-4 sm:gap-6 overflow-x-auto scrollbar-none px-4 sm:px-7 py-3">
+          {[
+            { label: "Total",        value: tasks.length,                                          color: "text-slate-700 dark:text-slate-300" },
+            { label: "Pendentes",    value: tasks.filter((t) => t.status === "pending").length,     color: "text-amber-600" },
+            { label: "Andamento",    value: tasks.filter((t) => t.status === "in_progress").length, color: "text-blue-600" },
+            { label: "Concluídas",   value: completedCount,                                        color: "text-emerald-600" },
+          ].map(({ label, value, color }) => (
+            <div key={label} className="flex items-center gap-1.5 shrink-0">
+              <span className={cn("text-base sm:text-lg font-bold", color)}>{value}</span>
+              <span className="text-xs text-slate-400">{label}</span>
+            </div>
+          ))}
+        </div>
+        {/* Filtros numa linha própria */}
+        <div className="flex items-center gap-2 px-4 sm:px-7 pb-3">
+          <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           <Select value={filterStatus} onValueChange={(v) => v && setFilterStatus(v as typeof filterStatus)}>
-            <SelectTrigger className="h-7 w-32 text-xs border-slate-200"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-7 flex-1 sm:flex-none sm:w-36 text-xs border-slate-200"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todos os status</SelectItem>
               <SelectItem value="pending">Pendente</SelectItem>
@@ -278,7 +283,7 @@ export default function TarefasPage() {
             </SelectContent>
           </Select>
           <Select value={filterPriority} onValueChange={(v) => v && setFilterPriority(v as typeof filterPriority)}>
-            <SelectTrigger className="h-7 w-32 text-xs border-slate-200"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="h-7 flex-1 sm:flex-none sm:w-36 text-xs border-slate-200"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todas as prio.</SelectItem>
               <SelectItem value="high">Alta</SelectItem>
@@ -289,7 +294,7 @@ export default function TarefasPage() {
         </div>
       </div>
 
-      <div className="p-7 space-y-8">
+      <div className="p-4 sm:p-7 space-y-6 sm:space-y-8">
         <TaskGroup title="Alta Prioridade" items={grouped.high} color="#EF4444" {...shared} />
         <TaskGroup title="Média Prioridade" items={grouped.medium} color="#F59E0B" {...shared} />
         <TaskGroup title="Baixa Prioridade" items={grouped.low} color="#22C55E" {...shared} />

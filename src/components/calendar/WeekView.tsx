@@ -133,8 +133,10 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
         })}
       </div>
 
-      <div className="flex flex-1 overflow-y-auto" ref={scrollRef}>
-        <div className="w-14 shrink-0 border-r border-[var(--border)]">
+      {/* overflow-auto permite scroll vertical E horizontal em mobile */}
+      <div className="flex-1 overflow-auto" ref={scrollRef}>
+        <div className="flex" style={{ minWidth: "clamp(100%, 640px, 9999px)" }}>
+        <div className="w-14 shrink-0 border-r border-[var(--border)] sticky left-0 z-10 bg-[var(--card)] dark:bg-[#18181B]">
           {HOURS.map((h) => (
             <div key={h} className="h-14 flex items-start justify-end pr-3 pt-1.5">
               <span className="text-[10px] text-[var(--muted-foreground)] font-medium tabular-nums">{h.toString().padStart(2, "0")}:00</span>
@@ -197,6 +199,7 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
             </div>
           );
         })}
+        </div>{/* fim flex min-w wrapper */}
       </div>
       {slotMenu && <SlotMenu {...slotMenu} onCreateEvent={onCreateEvent} onCreateTask={onCreateTask} onCreateHabit={onCreateHabit} onClose={() => setSlotMenu(null)} />}
     </div>

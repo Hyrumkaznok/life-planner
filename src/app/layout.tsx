@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AppProvider } from "@/lib/store";
 import { AuthProvider } from "@/lib/auth";
@@ -9,6 +9,13 @@ import { Toaster } from "@/components/ui/sonner";
 export const metadata: Metadata = {
   title: "Life Planner",
   description: "Seu planejador de vida pessoal",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover", // safe-area no iPhone
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
