@@ -57,10 +57,10 @@ export default function EstatisticasPage() {
         {/* Summary cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { icon: Calendar, label: "Total de Eventos", value: events.length, sub: `${todayEvents} hoje · ${thisWeekEvents} esta semana`, gradient: "from-rose-500 to-pink-600" },
-            { icon: CheckSquare, label: "Tarefas Concluídas", value: completedTasks, sub: `de ${totalTasks} no total`, gradient: "from-blue-500 to-indigo-600" },
-            { icon: Target, label: "Conclusões (7 dias)", value: last7DaysCompletions, sub: `${habits.length} hábitos ativos`, gradient: "from-violet-500 to-purple-600" },
-            { icon: Flame, label: "Melhor Sequência", value: `${bestStreak}d`, sub: "streak ativo", gradient: "from-orange-500 to-amber-600" },
+            { icon: Calendar, label: "Total de Eventos", value: events.length, sub: `${todayEvents} hoje · ${thisWeekEvents} esta semana`, gradient: "from-green-700 to-green-900" },
+            { icon: CheckSquare, label: "Tarefas Concluídas", value: completedTasks, sub: `de ${totalTasks} no total`, gradient: "from-teal-500 to-teal-700" },
+            { icon: Target, label: "Conclusões (7 dias)", value: last7DaysCompletions, sub: `${habits.length} hábitos ativos`, gradient: "from-zinc-600 to-zinc-800" },
+            { icon: Flame, label: "Melhor Sequência", value: `${bestStreak}d`, sub: "streak ativo", gradient: "from-slate-500 to-slate-700" },
           ].map(({ icon: Icon, label, value, sub, gradient }) => (
             <div key={label} className={`bg-gradient-to-br ${gradient} rounded-2xl p-5 text-white shadow-elevated`}>
               <Icon className="w-5 h-5 mb-3 opacity-80" />

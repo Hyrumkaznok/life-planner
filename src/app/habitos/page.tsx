@@ -49,7 +49,7 @@ function HabitFormDialog({ open, onClose, editHabit }: { open: boolean; onClose:
             <Label>Nome *</Label>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Meditação, Leitura..."
-              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50" />
+              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -85,7 +85,7 @@ function HabitFormDialog({ open, onClose, editHabit }: { open: boolean; onClose:
                 <button key={i} onClick={() => toggleDay(i)}
                   className={cn("flex-1 h-9 rounded-xl text-xs font-semibold border transition-all",
                     targetDays.includes(i)
-                      ? "bg-gradient-to-br bg-indigo-500 text-white border-rose-500 shadow-sm"
+                      ? "bg-zinc-800 text-white border-zinc-800 shadow-sm"
                       : "bg-white text-slate-500 border-slate-200 hover:border-rose-300")}>
                   {label}
                 </button>
@@ -95,7 +95,7 @@ function HabitFormDialog({ open, onClose, editHabit }: { open: boolean; onClose:
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-indigo-500 text-white border-0">Salvar</Button>
+          <Button onClick={handleSave} className="bg-zinc-900 hover:bg-zinc-800 text-white border-0">Salvar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -124,7 +124,7 @@ export default function HabitosPage() {
     <div className="min-h-full">
       <PageHeader title="Hábitos" subtitle="Construa rotinas consistentes dia após dia">
         <Button onClick={() => { setEditingHabit(undefined); setShowForm(true); }}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white border-0 shadow-sm"
+          className="bg-zinc-900 hover:bg-zinc-800 text-white border-0 shadow-sm"
           size="sm">
           <Plus className="w-4 h-4 mr-1" /> Novo Hábito
         </Button>
@@ -132,16 +132,16 @@ export default function HabitosPage() {
 
       <div className="p-7 space-y-6">
         {/* Daily progress hero */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-violet-600 to-purple-700 rounded-2xl p-6 text-white shadow-elevated">
+        <div className="relative overflow-hidden bg-gradient-to-br from-zinc-700 to-zinc-900 rounded-2xl p-6 text-white shadow-elevated">
           <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/5 rounded-full" />
           <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-white/5 rounded-full" />
           <div className="relative flex items-center justify-between">
             <div>
-              <p className="text-violet-200 text-sm mb-1 capitalize">
+              <p className="text-zinc-300 text-sm mb-1 capitalize">
                 {format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR })}
               </p>
               <p className="text-4xl font-bold">{progress}%</p>
-              <p className="text-violet-200 text-sm mt-1">
+              <p className="text-zinc-300 text-sm mt-1">
                 {completedToday.length} de {todayHabits.length} hábitos realizados
               </p>
             </div>
@@ -171,7 +171,7 @@ export default function HabitosPage() {
         ) : (
           <div className="space-y-3">
             {habits.map((habit) => {
-              const cat = CATEGORY_MAP[habit.categoryId];
+              const cat = CATEGORY_MAP[habit.categoryId] ?? { name: "—", color: "#94A3B8" };
               const isCompletedToday = habit.completedDates.includes(today);
               const isScheduledToday = habit.targetDays.includes(todayDOW);
 
@@ -266,7 +266,7 @@ export default function HabitosPage() {
         )}
       </div>
 
-      <HabitFormDialog open={showForm}
+      <HabitFormDialog key={editingHabit?.id ?? "new"} open={showForm}
         onClose={() => { setShowForm(false); setEditingHabit(undefined); }}
         editHabit={editingHabit} />
     </div>

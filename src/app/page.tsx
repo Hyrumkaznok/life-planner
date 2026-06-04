@@ -36,7 +36,7 @@ export default function DashboardPage() {
 
   const todayEvents  = events.filter((e) => e.date === today).sort((a, b) => a.startTime.localeCompare(b.startTime));
   const upcomingEvents = events
-    .filter((e) => e.date >= today)
+    .filter((e) => e.date > today)
     .sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.startTime.localeCompare(b.startTime))
     .slice(0, 6);
 
@@ -48,10 +48,10 @@ export default function DashboardPage() {
   const highPriTasks    = pendingTasks.filter((t) => t.priority === "high");
 
   const stats = [
-    { icon: Calendar,     color: "text-indigo-500", label: "Eventos hoje",    value: todayEvents.length,                                 href: "/calendario" },
+    { icon: Calendar,     color: "text-zinc-600",   label: "Eventos hoje",    value: todayEvents.length,                                 href: "/calendario" },
     { icon: CheckSquare,  color: "text-blue-500",   label: "Pendentes",       value: pendingTasks.length,                                href: "/tarefas"    },
     { icon: CheckCircle2, color: "text-emerald-500",label: "Concluídas",      value: `${completedCount}/${tasks.length}`,                href: "/tarefas"    },
-    { icon: Target,       color: "text-violet-500", label: "Hábitos hoje",    value: `${completedHabits.length}/${todayHabits.length}`,  href: "/habitos"    },
+    { icon: Target,       color: "text-zinc-500",   label: "Hábitos hoje",    value: `${completedHabits.length}/${todayHabits.length}`,  href: "/habitos"    },
     { icon: Flame,        color: "text-orange-400", label: "Maior sequência", value: `${bestStreak}d`,                                  href: "/habitos"    },
   ];
 
@@ -70,7 +70,7 @@ export default function DashboardPage() {
         </div>
         <Button
           onClick={() => setShowEventForm(true)}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white border-0 rounded-lg h-8 px-3 text-[12px] font-medium shadow-none transition-colors duration-150"
+          className="bg-zinc-900 hover:bg-zinc-800 text-white border-0 rounded-lg h-8 px-3 text-[12px] font-medium shadow-none transition-colors duration-150"
         >
           <Plus size={13} className="mr-1.5" strokeWidth={2} />
           Novo evento
@@ -98,7 +98,7 @@ export default function DashboardPage() {
           <div className="lg:col-span-3 bg-[var(--card)] dark:bg-[#27272A] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
               <span className="text-[12px] font-semibold text-[var(--foreground)]">Agenda de hoje</span>
-              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-indigo-500 hover:text-indigo-400 transition-colors font-medium">
+              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 transition-colors font-medium">
                 Ver calendário <ArrowRight size={11} strokeWidth={2} />
               </Link>
             </div>
@@ -141,7 +141,7 @@ export default function DashboardPage() {
           <div className="lg:col-span-2 bg-[var(--card)] dark:bg-[#27272A] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
               <span className="text-[12px] font-semibold text-[var(--foreground)]">Próximos eventos</span>
-              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-indigo-500 hover:text-indigo-400 transition-colors font-medium">
+              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 transition-colors font-medium">
                 Ver todos <ArrowRight size={11} strokeWidth={2} />
               </Link>
             </div>
@@ -157,7 +157,7 @@ export default function DashboardPage() {
                   className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors duration-100 ${i !== upcomingEvents.length - 1 ? "border-b border-[var(--border)]" : ""}`}>
                   <div className="w-8 h-8 rounded-xl bg-[var(--secondary)] dark:bg-[#3F3F46] flex flex-col items-center justify-center shrink-0">
                     <p className="text-[8px] text-[var(--muted-foreground)] uppercase leading-none">{format(eventDate, "MMM", { locale: ptBR })}</p>
-                    <p className={`text-[12px] font-bold leading-none mt-0.5 ${isEventToday ? "text-indigo-500" : "text-[var(--foreground)]"}`}>{format(eventDate, "d")}</p>
+                    <p className={`text-[12px] font-bold leading-none mt-0.5 ${isEventToday ? "text-zinc-900 dark:text-white font-bold" : "text-[var(--foreground)]"}`}>{format(eventDate, "d")}</p>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[12px] font-medium text-[var(--foreground)] truncate">{event.title}</p>
@@ -178,7 +178,7 @@ export default function DashboardPage() {
                 <span className="text-[12px] font-semibold text-[var(--foreground)]">Tarefas urgentes</span>
                 <span className="text-[10px] font-semibold text-red-500 bg-red-50 dark:bg-red-950/40 px-1.5 py-px rounded-md">{highPriTasks.length}</span>
               </div>
-              <Link href="/tarefas" className="flex items-center gap-1 text-[11px] text-indigo-500 hover:text-indigo-400 transition-colors font-medium">
+              <Link href="/tarefas" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 transition-colors font-medium">
                 Ver todas <ArrowRight size={11} strokeWidth={2} />
               </Link>
             </div>

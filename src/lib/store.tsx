@@ -5,6 +5,27 @@ import { Event, Task, Habit, AppSettings, Category, UserProfile } from "./types"
 import { MOCK_EVENTS, MOCK_TASKS, MOCK_HABITS } from "./mock-data";
 import { format } from "date-fns";
 
+// ── Streak helper ─────────────────────────────────────────────────────────────
+
+function recalcStreak(completedDates: string[], targetDays: number[], today: string): number {
+  let streak = 0;
+  const base = new Date();
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(base);
+    d.setDate(base.getDate() - i);
+    const dow = d.getDay();
+    if (!targetDays.includes(dow)) continue;
+    const dateStr = format(d, "yyyy-MM-dd");
+    if (completedDates.includes(dateStr)) {
+      streak++;
+    } else if (dateStr < today) {
+      break;
+    }
+    // today not yet completed → skip without breaking
+  }
+  return streak;
+}
+
 // ── localStorage helpers ──────────────────────────────────────────────────────
 
 function load<T>(key: string, fallback: T): T {
@@ -120,7 +141,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       prev.map((h) => {
         if (h.id !== id) return h;
         const isCompleted = h.completedDates.includes(date);
-        return { ...h, completedDates: isCompleted ? h.completedDates.filter((d) => d !== date) : [...h.completedDates, date] };
+        const newDates = isCompleted
+          ? h.completedDates.filter((d) => d !== date)
+          : [...h.completedDates, date];
+        const today = format(new Date(), "yyyy-MM-dd");
+        return { ...h, completedDates: newDates, streak: recalcStreak(newDates, h.targetDays, today) };
       })
     );
   }, []);

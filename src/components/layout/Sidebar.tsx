@@ -30,7 +30,7 @@ export function Sidebar() {
 
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-3 py-4 shrink-0">
-        <div className="w-6 h-6 rounded-md bg-indigo-500 flex items-center justify-center shrink-0">
+        <div className="w-6 h-6 rounded-md bg-zinc-600 flex items-center justify-center shrink-0">
           <Layers size={13} className="text-white" strokeWidth={1.5} />
         </div>
         <span className="hidden md:block text-[12px] font-medium text-white/70 tracking-tight">

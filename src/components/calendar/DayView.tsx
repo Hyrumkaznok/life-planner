@@ -61,9 +61,9 @@ function SlotMenu({ x, y, date, time, onCreateEvent, onCreateTask, onCreateHabit
           </div>
         </button>
         <button onClick={() => { onCreateHabit(); onClose(); }}
-          className="w-full flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-violet-50 text-left transition-colors">
-          <div className="w-7 h-7 bg-violet-100 rounded-lg flex items-center justify-center">
-            <Target className="w-3.5 h-3.5 text-violet-600" />
+          className="w-full flex items-center gap-3 px-2 py-2.5 rounded-xl hover:bg-zinc-100 text-left transition-colors">
+          <div className="w-7 h-7 bg-zinc-200 rounded-lg flex items-center justify-center">
+            <Target className="w-3.5 h-3.5 text-zinc-700" />
           </div>
           <div>
             <p className="text-sm font-medium text-slate-700">Novo Hábito</p>

@@ -109,7 +109,7 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
           <button onClick={() => setWeekStart(addWeeks(weekStart, 1))} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46] transition-colors text-[var(--muted-foreground)]"><ChevronRight size={15} strokeWidth={2} /></button>
         </div>
         <button onClick={() => { const t = new Date(); setWeekStart(startOfWeek(t, { weekStartsOn: 1 })); setSelectedDate(format(t, "yyyy-MM-dd")); }}
-          className="text-[12px] font-medium text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 px-3 py-1.5 rounded-xl transition-colors">Hoje</button>
+          className="text-[12px] font-medium text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800/40 px-3 py-1.5 rounded-xl transition-colors">Hoje</button>
       </div>
 
       <div className="flex shrink-0 border-b border-[var(--border)]">
@@ -119,7 +119,7 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
           return (
             <div key={day.toISOString()} className="flex-1 text-center py-3 cursor-pointer hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors" onClick={() => setSelectedDate(format(day, "yyyy-MM-dd"))}>
               <p className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest">{format(day, "EEE", { locale: ptBR })}</p>
-              <div className={`mx-auto mt-1.5 w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-semibold ${tf ? "bg-indigo-500 text-white" : "text-[var(--foreground)]"}`}>{format(day, "d")}</div>
+              <div className={`mx-auto mt-1.5 w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-semibold ${tf ? "bg-zinc-900 text-white" : "text-[var(--foreground)]"}`}>{format(day, "d")}</div>
             </div>
           );
         })}
@@ -139,7 +139,7 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
           const isDropTarget = preview?.date === dateStr;
           return (
             <div key={day.toISOString()}
-              className={`flex-1 relative border-r border-[var(--border)] last:border-r-0 ${isDropTarget && drag ? "bg-indigo-50/30 dark:bg-indigo-950/10" : ""}`}
+              className={`flex-1 relative border-r border-[var(--border)] last:border-r-0 ${isDropTarget && drag ? "bg-zinc-100/30 dark:bg-zinc-800/10" : ""}`}
               ref={(el) => { if (el) columnRefs.current.set(dateStr, el); }}
               onDragOver={(e) => handleColumnDragOver(e, dateStr)}
               onDrop={(e) => handleColumnDrop(e, dateStr)}>

@@ -43,7 +43,7 @@ function QuickTaskDialog({ open, onClose }: { open: boolean; onClose: () => void
             <input
               type="text" value={title} onChange={(e) => setTitle(e.target.value)}
               placeholder="O que precisa ser feito?"
-              className="mt-1 w-full border border-[var(--border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="mt-1 w-full border border-[var(--border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -78,7 +78,7 @@ function QuickTaskDialog({ open, onClose }: { open: boolean; onClose: () => void
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-indigo-500 hover:bg-indigo-600 text-white">Criar</Button>
+          <Button onClick={handleSave} className="bg-zinc-900 hover:bg-zinc-800 text-white">Criar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -113,7 +113,7 @@ function QuickHabitDialog({ open, onClose }: { open: boolean; onClose: () => voi
             <input
               type="text" value={name} onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Meditação, Leitura..."
-              className="mt-1 w-full border border-[var(--border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="mt-1 w-full border border-[var(--border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700"
             />
           </div>
           <div>
@@ -142,7 +142,7 @@ function QuickHabitDialog({ open, onClose }: { open: boolean; onClose: () => voi
                   className={`w-9 h-9 rounded-full text-xs font-medium border transition-colors ${
                     targetDays.includes(i)
                       ? "bg-rose-600 text-white border-rose-600"
-                      : "bg-white text-[var(--foreground)] border-[var(--border)] hover:border-indigo-300"
+                      : "bg-white text-[var(--foreground)] border-[var(--border)] hover:border-zinc-400"
                   }`}
                 >
                   {label}
@@ -153,7 +153,7 @@ function QuickHabitDialog({ open, onClose }: { open: boolean; onClose: () => voi
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-indigo-500 hover:bg-indigo-600 text-white">Criar</Button>
+          <Button onClick={handleSave} className="bg-zinc-900 hover:bg-zinc-800 text-white">Criar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -195,7 +195,7 @@ export default function CalendarioPage() {
         </Tabs>
         <Button
           onClick={() => { setEditingEvent(undefined); setShowEventForm(true); }}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white shadow-sm border-0"
+          className="bg-zinc-900 hover:bg-zinc-800 text-white shadow-sm border-0"
           size="sm"
         >
           <Plus className="w-4 h-4 mr-1" />
@@ -210,6 +210,7 @@ export default function CalendarioPage() {
       </div>
 
       <EventForm
+        key={editingEvent?.id ?? "new"}
         open={showEventForm}
         onClose={() => { setShowEventForm(false); setEditingEvent(undefined); }}
         initialDate={selectedDate}

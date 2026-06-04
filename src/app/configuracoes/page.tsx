@@ -80,7 +80,7 @@ function CategoryManager() {
               placeholder="Nome da categoria"
               autoFocus
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-300"
+              className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-300"
             />
             {/* Color grid */}
             <div>
@@ -111,7 +111,7 @@ function CategoryManager() {
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={handleAdd} size="sm" className="bg-indigo-500 text-white border-0 text-xs">
+              <Button onClick={handleAdd} size="sm" className="bg-zinc-900 hover:bg-zinc-800 text-white border-0 text-xs">
                 Criar categoria
               </Button>
               <Button onClick={() => { setAdding(false); setName(""); }} variant="outline" size="sm" className="text-xs">
@@ -166,7 +166,7 @@ export default function ConfiguracoesPage() {
               <div className="flex items-center gap-2">
                 <Sun className="w-3.5 h-3.5 text-amber-400" />
                 <Switch checked={settings.theme === "dark"} onCheckedChange={(v) => updateSettings({ theme: v ? "dark" : "light" })} />
-                <Moon className="w-3.5 h-3.5 text-violet-400" />
+                <Moon className="w-3.5 h-3.5 text-zinc-500" />
               </div>
             }
           />
@@ -190,14 +190,14 @@ export default function ConfiguracoesPage() {
         </Section>
 
         {/* Categorias */}
-        <Section icon={<Tag className="w-4 h-4 text-violet-500" />} title="Categorias">
+        <Section icon={<Tag className="w-4 h-4 text-zinc-500" />} title="Categorias">
           <CategoryManager />
         </Section>
 
         {/* Sobre */}
         <Section icon={<Sparkles className="w-4 h-4 text-rose-500" />} title="Sobre o App">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br bg-indigo-500 flex items-center justify-center shadow-lg shadow-rose-200">
+            <div className="w-12 h-12 rounded-2xl bg-zinc-900 flex items-center justify-center shadow-lg shadow-zinc-200">
               <Calendar className="w-6 h-6 text-white" />
             </div>
             <div>

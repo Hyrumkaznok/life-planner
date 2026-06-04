@@ -62,7 +62,7 @@ function TaskFormDialog({ open, onClose, editTask }: { open: boolean; onClose: (
             <Label>Título *</Label>
             <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}
               placeholder="Descrição da tarefa"
-              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50" />
+              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50" />
           </div>
           <div>
             <Label>Categoria</Label>
@@ -106,7 +106,7 @@ function TaskFormDialog({ open, onClose, editTask }: { open: boolean; onClose: (
           <div>
             <Label>Prazo</Label>
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)}
-              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50" />
+              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50" />
           </div>
           <div>
             <Label>Descrição</Label>
@@ -116,7 +116,7 @@ function TaskFormDialog({ open, onClose, editTask }: { open: boolean; onClose: (
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-indigo-500 text-white border-0">Salvar</Button>
+          <Button onClick={handleSave} className="bg-zinc-900 hover:bg-zinc-800 text-white border-0">Salvar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -124,13 +124,12 @@ function TaskFormDialog({ open, onClose, editTask }: { open: boolean; onClose: (
 }
 
 interface TaskCardProps {
-  task: Task; today: string;
+  task: Task; today: string; categoryMap: ReturnType<typeof useCategoryMap>;
   onToggle: (t: Task) => void; onEdit: (t: Task) => void; onDelete: (id: string) => void;
 }
 
-function TaskCard({ task, today, onToggle, onEdit, onDelete }: TaskCardProps) {
-  const CATEGORY_MAP = useCategoryMap();
-  const cat = CATEGORY_MAP[task.categoryId];
+function TaskCard({ task, today, categoryMap, onToggle, onEdit, onDelete }: TaskCardProps) {
+  const cat = categoryMap[task.categoryId] ?? { name: "—", color: "#94A3B8" };
   const p = PRIORITY_CONFIG[task.priority];
   const s = STATUS_CONFIG[task.status];
   const isOverdue = task.dueDate && task.dueDate < today && task.status !== "completed";
@@ -185,11 +184,11 @@ function TaskCard({ task, today, onToggle, onEdit, onDelete }: TaskCardProps) {
 }
 
 interface TaskGroupProps {
-  title: string; items: Task[]; color: string; today: string;
+  title: string; items: Task[]; color: string; today: string; categoryMap: ReturnType<typeof useCategoryMap>;
   onToggle: (t: Task) => void; onEdit: (t: Task) => void; onDelete: (id: string) => void;
 }
 
-function TaskGroup({ title, items, color, today, onToggle, onEdit, onDelete }: TaskGroupProps) {
+function TaskGroup({ title, items, color, today, categoryMap, onToggle, onEdit, onDelete }: TaskGroupProps) {
   if (items.length === 0) return null;
   return (
     <div>
@@ -200,7 +199,7 @@ function TaskGroup({ title, items, color, today, onToggle, onEdit, onDelete }: T
       </div>
       <div className="space-y-2">
         {items.map((task) => (
-          <TaskCard key={task.id} task={task} today={today}
+          <TaskCard key={task.id} task={task} today={today} categoryMap={categoryMap}
             onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} />
         ))}
       </div>
@@ -210,6 +209,7 @@ function TaskGroup({ title, items, color, today, onToggle, onEdit, onDelete }: T
 
 export default function TarefasPage() {
   const { tasks, updateTask, deleteTask } = useAppStore();
+  const CATEGORY_MAP = useCategoryMap();
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | undefined>();
   const [filterStatus, setFilterStatus] = useState<TaskStatus | "all">("all");
@@ -239,7 +239,7 @@ export default function TarefasPage() {
   const handleEdit = (task: Task) => { setEditingTask(task); setShowForm(true); };
   const handleDelete = (id: string) => { deleteTask(id); toast.success("Tarefa excluída."); };
 
-  const shared = { today, onToggle: handleToggle, onEdit: handleEdit, onDelete: handleDelete };
+  const shared = { today, categoryMap: CATEGORY_MAP, onToggle: handleToggle, onEdit: handleEdit, onDelete: handleDelete };
 
   const completedCount = tasks.filter((t) => t.status === "completed").length;
 
@@ -247,7 +247,7 @@ export default function TarefasPage() {
     <div className="min-h-full">
       <PageHeader title="Tarefas" subtitle="Gerencie e acompanhe suas tarefas">
         <Button onClick={() => { setEditingTask(undefined); setShowForm(true); }}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white border-0 shadow-sm"
+          className="bg-zinc-900 hover:bg-zinc-800 text-white border-0 shadow-sm"
           size="sm">
           <Plus className="w-4 h-4 mr-1" /> Nova Tarefa
         </Button>
@@ -304,7 +304,7 @@ export default function TarefasPage() {
         )}
       </div>
 
-      <TaskFormDialog open={showForm}
+      <TaskFormDialog key={editingTask?.id ?? "new"} open={showForm}
         onClose={() => { setShowForm(false); setEditingTask(undefined); }}
         editTask={editingTask} />
     </div>
