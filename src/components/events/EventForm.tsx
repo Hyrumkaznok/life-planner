@@ -47,7 +47,7 @@ export function EventForm({ open, onClose, initialDate, editEvent }: EventFormPr
     const [sh, sm] = t.split(":").map(Number);
     const [eh, em] = endTime.split(":").map(Number);
     if (sh * 60 + sm >= eh * 60 + em) {
-      const newEnd = sh * 60 + sm + 60;
+      const newEnd = sh * 60 + sm + 15;
       const h = Math.floor(newEnd / 60) % 24;
       const m = newEnd % 60;
       setEndTime(`${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`);

@@ -1,9 +1,31 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { Event, Task, Habit, AppSettings, Category, UserProfile } from "./types";
 import { MOCK_EVENTS, MOCK_TASKS, MOCK_HABITS } from "./mock-data";
 import { format } from "date-fns";
+
+// ── localStorage helpers ──────────────────────────────────────────────────────
+
+function load<T>(key: string, fallback: T): T {
+  if (typeof window === "undefined") return fallback;
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function save(key: string, value: unknown) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // quota exceeded — fail silently
+  }
+}
+
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 interface AppStore {
   events: Event[];
@@ -32,27 +54,30 @@ interface AppStore {
   updateUserProfile: (profile: Partial<UserProfile>) => void;
 }
 
+const DEFAULT_SETTINGS: AppSettings = { theme: "light", weekStartsOnMonday: true, defaultView: "week" };
+const DEFAULT_PROFILE: UserProfile = { name: "", role: "", email: "", initials: "U", avatarColor: "#E11D48" };
+
+// ── Context ───────────────────────────────────────────────────────────────────
+
 const AppContext = createContext<AppStore | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
-  const [tasks, setTasks] = useState<Task[]>(MOCK_TASKS);
-  const [habits, setHabits] = useState<Habit[]>(MOCK_HABITS);
-  const [customCategories, setCustomCategories] = useState<Category[]>([]);
-  const [userProfile, setUserProfile] = useState<UserProfile>({
-    name: "",
-    role: "",
-    email: "",
-    initials: "U",
-    avatarColor: "#E11D48",
-  });
-  const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
-  const [calendarView, setCalendarView] = useState<"day" | "week" | "month">("week");
-  const [settings, setSettings] = useState<AppSettings>({
-    theme: "light",
-    weekStartsOnMonday: true,
-    defaultView: "week",
-  });
+  const [events, setEvents]                   = useState<Event[]>(() => load("lp_events", MOCK_EVENTS));
+  const [tasks, setTasks]                     = useState<Task[]>(() => load("lp_tasks", MOCK_TASKS));
+  const [habits, setHabits]                   = useState<Habit[]>(() => load("lp_habits", MOCK_HABITS));
+  const [customCategories, setCustomCategories] = useState<Category[]>(() => load("lp_categories", []));
+  const [userProfile, setUserProfile]         = useState<UserProfile>(() => load("lp_profile", DEFAULT_PROFILE));
+  const [settings, setSettings]               = useState<AppSettings>(() => load("lp_settings", DEFAULT_SETTINGS));
+  const [selectedDate, setSelectedDate]       = useState(format(new Date(), "yyyy-MM-dd"));
+  const [calendarView, setCalendarView]       = useState<"day" | "week" | "month">("week");
+
+  // Persist to localStorage whenever state changes
+  useEffect(() => { save("lp_events", events); }, [events]);
+  useEffect(() => { save("lp_tasks", tasks); }, [tasks]);
+  useEffect(() => { save("lp_habits", habits); }, [habits]);
+  useEffect(() => { save("lp_categories", customCategories); }, [customCategories]);
+  useEffect(() => { save("lp_profile", userProfile); }, [userProfile]);
+  useEffect(() => { save("lp_settings", settings); }, [settings]);
 
   const addEvent = useCallback((event: Omit<Event, "id">) => {
     setEvents((prev) => [...prev, { ...event, id: `e${Date.now()}` }]);
@@ -105,8 +130,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const addCustomCategory = useCallback((cat: Omit<Category, "id" | "bgColor" | "textColor" | "custom">) => {
-    const id = `custom-${Date.now()}`;
-    setCustomCategories((prev) => [...prev, { ...cat, id, bgColor: "", textColor: "", custom: true }]);
+    setCustomCategories((prev) => [...prev, { ...cat, id: `custom-${Date.now()}`, bgColor: "", textColor: "", custom: true }]);
   }, []);
 
   const deleteCustomCategory = useCallback((id: string) => {

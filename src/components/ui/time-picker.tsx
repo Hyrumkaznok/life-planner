@@ -4,10 +4,10 @@ import { useState, useRef, useEffect } from "react";
 import { Clock, ChevronUp, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
-  const h = Math.floor(i / 2);
-  const m = i % 2 === 0 ? "00" : "30";
-  return `${h.toString().padStart(2, "0")}:${m}`;
+const TIME_SLOTS = Array.from({ length: 96 }, (_, i) => {
+  const h = Math.floor(i / 4);
+  const m = (i % 4) * 15;
+  return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
 });
 
 function timeToMinutes(t: string) {
@@ -117,14 +117,14 @@ export function TimePicker({ value, onChange, label, minTime }: TimePickerProps)
         <div className="flex flex-col gap-0 shrink-0" onClick={(e) => e.stopPropagation()}>
           <button
             type="button"
-            onClick={() => adjust(30)}
+            onClick={() => adjust(15)}
             className="w-5 h-4 flex items-center justify-center rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
           >
             <ChevronUp className="w-3 h-3" />
           </button>
           <button
             type="button"
-            onClick={() => adjust(-30)}
+            onClick={() => adjust(-15)}
             className="w-5 h-4 flex items-center justify-center rounded hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
           >
             <ChevronDown className="w-3 h-3" />
