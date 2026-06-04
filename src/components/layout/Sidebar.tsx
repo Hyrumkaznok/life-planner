@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Calendar, CheckSquare,
-  Target, BarChart3, Settings, Layers, LogOut,
+  Target, BarChart3, Settings, LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
@@ -41,10 +41,8 @@ export function Sidebar() {
     <aside className="hidden md:flex w-[52px] md:w-[212px] flex-col shrink-0 bg-[var(--sidebar-bg)] border-r border-white/[0.04]">
 
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-3 py-4 shrink-0">
-        <div className="w-6 h-6 rounded-md bg-[rgba(139,92,246,0.2)] flex items-center justify-center shrink-0">
-          <Layers size={13} className="text-[#C4B5FD]" strokeWidth={1.5} />
-        </div>
+      <div className="flex items-center gap-2 px-3 py-4 shrink-0">
+        <img src="/icon.png" alt="LifeBook" className="w-6 h-6 rounded-md shrink-0 object-cover" />
         <span className="hidden md:block text-[12px] font-medium text-white/50 tracking-tight">
           LifeBook
         </span>
