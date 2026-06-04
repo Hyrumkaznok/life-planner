@@ -31,12 +31,12 @@ function SlotMenu({ x, y, date, time, onCreateEvent, onCreateTask, onCreateHabit
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="fixed z-50 bg-[var(--card)] dark:bg-[#27272A] rounded-2xl shadow-float border border-[var(--border)] p-1.5 w-52 animate-in fade-in zoom-in-95 duration-150"
+      <div className="fixed z-50 bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl shadow-float border border-[var(--border)] p-1.5 w-52 animate-in fade-in zoom-in-95 duration-150"
         style={{ left: Math.min(x, window.innerWidth - 220), top: Math.min(y, window.innerHeight - 180) }}>
         <p className="text-[10px] font-semibold text-[var(--muted-foreground)] uppercase tracking-widest px-2 py-1.5">{label} · {time}</p>
         {items.map(({ label: l, Icon, action }) => (
           <button key={l} onClick={() => { action(); onClose(); }}
-            className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46] transition-colors text-left">
+            className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)] transition-colors text-left">
             <div className="w-7 h-7 bg-[var(--secondary)] dark:bg-[#3F3F46] rounded-xl flex items-center justify-center">
               <Icon size={13} className="text-[var(--muted-foreground)]" strokeWidth={1.75} />
             </div>
@@ -109,15 +109,15 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
   }, [drag, preview, events, updateEvent]);
 
   return (
-    <div className="flex flex-col h-full bg-[var(--card)] dark:bg-[#18181B]">
+    <div className="flex flex-col h-full bg-[var(--card)] dark:bg-[var(--card)]">
       <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)] shrink-0">
         <div className="flex items-center gap-1">
-          <button onClick={() => setWeekStart(subWeeks(weekStart, 1))} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46] transition-colors text-[var(--muted-foreground)]"><ChevronLeft size={15} strokeWidth={2} /></button>
+          <button onClick={() => setWeekStart(subWeeks(weekStart, 1))} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)] transition-colors text-[var(--muted-foreground)]"><ChevronLeft size={15} strokeWidth={2} /></button>
           <span className="text-[13px] font-semibold text-[var(--foreground)] min-w-48 text-center">{format(weekStart, "d MMM", { locale: ptBR })} – {format(endOfWeek(weekStart, { weekStartsOn: 1 }), "d MMM yyyy", { locale: ptBR })}</span>
-          <button onClick={() => setWeekStart(addWeeks(weekStart, 1))} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46] transition-colors text-[var(--muted-foreground)]"><ChevronRight size={15} strokeWidth={2} /></button>
+          <button onClick={() => setWeekStart(addWeeks(weekStart, 1))} className="w-8 h-8 rounded-xl flex items-center justify-center hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)] transition-colors text-[var(--muted-foreground)]"><ChevronRight size={15} strokeWidth={2} /></button>
         </div>
         <button onClick={() => { const t = new Date(); setWeekStart(startOfWeek(t, { weekStartsOn: 1 })); setSelectedDate(format(t, "yyyy-MM-dd")); }}
-          className="text-[12px] font-medium text-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800/40 px-3 py-1.5 rounded-xl transition-colors">Hoje</button>
+          className="text-[12px] font-medium text-zinc-700 hover:bg-zinc-100 dark:hover:bg-[var(--accent)]/40 px-3 py-1.5 rounded-xl transition-colors">Hoje</button>
       </div>
 
       <div className="flex shrink-0 border-b border-[var(--border)]">
@@ -125,9 +125,9 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
         {days.map((day) => {
           const tf = isToday(day);
           return (
-            <div key={day.toISOString()} className="flex-1 text-center py-3 cursor-pointer hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors" onClick={() => setSelectedDate(format(day, "yyyy-MM-dd"))}>
+            <div key={day.toISOString()} className="flex-1 text-center py-3 cursor-pointer hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/30 transition-colors" onClick={() => setSelectedDate(format(day, "yyyy-MM-dd"))}>
               <p className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest">{format(day, "EEE", { locale: ptBR })}</p>
-              <div className={`mx-auto mt-1.5 w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-semibold ${tf ? "bg-zinc-900 text-white" : "text-[var(--foreground)]"}`}>{format(day, "d")}</div>
+              <div className={`mx-auto mt-1.5 w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-semibold ${tf ? "bg-zinc-900 dark:bg-violet-600 text-white" : "text-[var(--foreground)]"}`}>{format(day, "d")}</div>
             </div>
           );
         })}
@@ -136,7 +136,7 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
       {/* overflow-auto permite scroll vertical E horizontal em mobile */}
       <div className="flex-1 overflow-auto" ref={scrollRef}>
         <div className="flex" style={{ minWidth: "clamp(100%, 640px, 9999px)" }}>
-        <div className="w-14 shrink-0 border-r border-[var(--border)] sticky left-0 z-10 bg-[var(--card)] dark:bg-[#18181B]">
+        <div className="w-14 shrink-0 border-r border-[var(--border)] sticky left-0 z-10 bg-[var(--card)] dark:bg-[var(--card)]">
           {HOURS.map((h) => (
             <div key={h} className="h-14 flex items-start justify-end pr-3 pt-1.5">
               <span className="text-[10px] text-[var(--muted-foreground)] font-medium tabular-nums">{h.toString().padStart(2, "0")}:00</span>
@@ -154,7 +154,7 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
               onDragOver={(e) => handleColumnDragOver(e, dateStr)}
               onDrop={(e) => handleColumnDrop(e, dateStr)}>
               {HOURS.map((hour) => (
-                <div key={hour} className="h-14 border-b border-[var(--border)]/40 hover:bg-[var(--secondary)]/40 dark:hover:bg-[#3F3F46]/20 cursor-pointer transition-colors duration-100"
+                <div key={hour} className="h-14 border-b border-[var(--border)]/40 hover:bg-[var(--secondary)]/40 dark:hover:bg-[var(--accent)]/20 cursor-pointer transition-colors duration-100"
                   onClick={(e) => { if (!drag) { const t = `${hour.toString().padStart(2, "0")}:00`; setSelectedDate(dateStr); setSlotMenu({ x: e.clientX, y: e.clientY, date: dateStr, time: t }); }}} />
               ))}
               {dayEvents.map((event) => {

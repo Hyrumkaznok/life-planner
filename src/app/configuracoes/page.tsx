@@ -38,14 +38,14 @@ function CategoryManager() {
     <div className="space-y-4">
       {/* Built-in categories */}
       <div>
-        <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">
+        <p className="text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider mb-2">
           Categorias padrão ({CATEGORIES.length})
         </p>
         <div className="grid grid-cols-2 gap-1.5">
           {CATEGORIES.map((cat) => (
-            <div key={cat.id} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-700/50">
+            <div key={cat.id} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[var(--secondary)]">
               <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
-              <span className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate">{cat.name}</span>
+              <span className="text-xs font-medium text-[var(--foreground)] truncate">{cat.name}</span>
             </div>
           ))}
         </div>
@@ -56,7 +56,7 @@ function CategoryManager() {
       {/* Custom categories */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+          <p className="text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider">
             Personalizadas ({customCategories.length})
           </p>
           {!adding && (
@@ -80,7 +80,7 @@ function CategoryManager() {
               placeholder="Nome da categoria"
               autoFocus
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-300"
+              className="w-full border border-slate-200 dark:border-[var(--border)] rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-[var(--card)] text-slate-900 dark:text-[var(--foreground)] placeholder:text-slate-300"
             />
             {/* Color grid */}
             <div>
@@ -122,9 +122,9 @@ function CategoryManager() {
         )}
 
         {customCategories.length === 0 && !adding ? (
-          <div className="text-center py-6 border border-dashed border-slate-200 dark:border-slate-700 rounded-2xl">
+          <div className="text-center py-6 border border-dashed border-slate-200 dark:border-[var(--border)] rounded-2xl">
             <Tag className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600 mb-2" />
-            <p className="text-xs text-slate-400 dark:text-slate-500">Nenhuma categoria personalizada ainda</p>
+            <p className="text-xs text-[var(--muted-foreground)]">Nenhuma categoria personalizada ainda</p>
             <button onClick={() => setAdding(true)} className="mt-2 text-xs text-rose-500 hover:text-rose-600 font-semibold">
               Criar minha primeira categoria
             </button>
@@ -132,9 +132,9 @@ function CategoryManager() {
         ) : (
           <div className="space-y-1.5">
             {customCategories.map((cat) => (
-              <div key={cat.id} className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-700/50 group">
+              <div key={cat.id} className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[var(--secondary)] group">
                 <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
-                <span className="text-xs font-medium text-slate-700 dark:text-slate-300 flex-1 truncate">{cat.name}</span>
+                <span className="text-xs font-medium text-[var(--foreground)] flex-1 truncate">{cat.name}</span>
                 <span className="text-[9px] text-slate-400 bg-slate-200 dark:bg-slate-600 px-1.5 py-0.5 rounded-full">Personalizada</span>
                 <button
                   onClick={() => { deleteCustomCategory(cat.id); toast.success("Categoria removida."); }}
@@ -178,7 +178,7 @@ export default function ConfiguracoesPage() {
           <Row label="Vista padrão do calendário" description="Como o calendário abre por padrão"
             action={
               <Select value={settings.defaultView} onValueChange={(v) => v && updateSettings({ defaultView: v as typeof settings.defaultView })}>
-                <SelectTrigger className="w-28 h-8 text-xs border-slate-200 dark:border-slate-600"><SelectValue /></SelectTrigger>
+                <SelectTrigger className="w-28 h-8 text-xs border-slate-200 dark:border-[var(--border)]"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="day">Dia</SelectItem>
                   <SelectItem value="week">Semana</SelectItem>
@@ -201,7 +201,7 @@ export default function ConfiguracoesPage() {
               <Calendar className="w-6 h-6 text-white" />
             </div>
             <div>
-              <p className="font-bold text-slate-900 dark:text-white">Life Planner</p>
+              <p className="font-bold text-slate-900 dark:text-[var(--foreground)]">Life Planner</p>
               <p className="text-xs text-slate-400">Versão 1.0.0 MVP</p>
             </div>
           </div>
@@ -214,8 +214,8 @@ export default function ConfiguracoesPage() {
               ["Estado", "React Context (sem banco de dados)"],
             ].map(([k, v]) => (
               <div key={k} className="flex justify-between items-center">
-                <span className="text-sm text-slate-600 dark:text-slate-300">{k}</span>
-                <span className="text-xs text-slate-400 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded-full">{v}</span>
+                <span className="text-sm text-[var(--foreground)]">{k}</span>
+                <span className="text-xs text-slate-400 bg-slate-100 dark:bg-[var(--accent)] px-2 py-0.5 rounded-full">{v}</span>
               </div>
             ))}
           </div>
@@ -227,10 +227,10 @@ export default function ConfiguracoesPage() {
 
 function Section({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl card-shadow overflow-hidden border border-slate-100 dark:border-slate-700">
-      <div className="flex items-center gap-2.5 px-6 py-4 border-b border-slate-100 dark:border-slate-700">
+    <div className="bg-[var(--card)] rounded-2xl card-shadow overflow-hidden border border-[var(--border)]">
+      <div className="flex items-center gap-2.5 px-6 py-4 border-b border-slate-100 dark:border-[var(--border)]">
         {icon}
-        <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100">{title}</h2>
+        <h2 className="text-sm font-bold text-[var(--foreground)]">{title}</h2>
       </div>
       <div className="p-6">{children}</div>
     </div>
@@ -241,8 +241,8 @@ function Row({ label, description, action }: { label: string; description: strin
   return (
     <div className="flex items-center justify-between py-1">
       <div>
-        <p className="text-sm font-medium text-slate-800 dark:text-slate-100">{label}</p>
-        <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{description}</p>
+        <p className="text-sm font-medium text-[var(--foreground)]">{label}</p>
+        <p className="text-xs text-[var(--muted-foreground)] mt-0.5">{description}</p>
       </div>
       {action}
     </div>

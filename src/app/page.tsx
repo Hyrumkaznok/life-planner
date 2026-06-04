@@ -59,7 +59,7 @@ export default function DashboardPage() {
     <div className="min-h-full bg-[var(--background)]">
 
       {/* ── Header ────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-4 py-3.5 sm:px-8 sm:py-5 bg-[var(--card)] dark:bg-[#18181B] border-b border-[var(--border)]">
+      <div className="flex items-center justify-between px-4 py-3.5 sm:px-8 sm:py-5 bg-[var(--card)] dark:bg-[var(--secondary)] border-b border-[var(--border)]">
         <div>
           <p className="text-[11px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest mb-0.5">
             {dateCapital}
@@ -78,10 +78,10 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Stats strip — scroll horizontal em mobile ─────────────────── */}
-      <div className="flex overflow-x-auto scrollbar-none bg-[var(--card)] dark:bg-[#18181B] border-b border-[var(--border)]">
+      <div className="flex overflow-x-auto scrollbar-none bg-[var(--card)] dark:bg-[var(--secondary)] border-b border-[var(--border)]">
         {stats.map(({ icon: Icon, color, label, value, href }, i) => (
           <Link key={href} href={href} className="flex-none min-w-[90px] group">
-            <div className={`flex flex-col px-4 sm:px-6 py-3 sm:py-4 ${i !== 0 ? "border-l border-[var(--border)]" : ""} hover:bg-[var(--secondary)] dark:hover:bg-[#27272A] transition-colors duration-150`}>
+            <div className={`flex flex-col px-4 sm:px-6 py-3 sm:py-4 ${i !== 0 ? "border-l border-[var(--border)]" : ""} hover:bg-[var(--secondary)] dark:hover:bg-[var(--card)] transition-colors duration-150`}>
               <Icon size={14} className={`${color} mb-2`} strokeWidth={1.5} />
               <span className="text-[17px] sm:text-[19px] font-semibold text-[var(--foreground)] leading-none">{value}</span>
               <span className="text-[10px] sm:text-[11px] text-[var(--muted-foreground)] mt-1 font-normal">{label}</span>
@@ -95,7 +95,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
 
           {/* Today */}
-          <div className="lg:col-span-3 bg-[var(--card)] dark:bg-[#27272A] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
+          <div className="lg:col-span-3 bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
               <span className="text-[12px] font-semibold text-[var(--foreground)]">Agenda de hoje</span>
               <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 transition-colors font-medium">
@@ -115,7 +115,7 @@ export default function DashboardPage() {
                   const isCompleted = !!event.completed;
                   return (
                     <div key={event.id}
-                      className={`flex items-center gap-3.5 px-5 py-3 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors duration-100 ${i !== todayEvents.length - 1 ? "border-b border-[var(--border)]" : ""} ${isCompleted ? "opacity-60" : ""}`}>
+                      className={`flex items-center gap-3.5 px-5 py-3 hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/40 transition-colors duration-100 ${i !== todayEvents.length - 1 ? "border-b border-[var(--border)]" : ""} ${isCompleted ? "opacity-60" : ""}`}>
                       <button
                         onClick={() => updateEvent(event.id, { completed: !isCompleted })}
                         className="shrink-0 transition-transform hover:scale-110"
@@ -149,7 +149,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Upcoming */}
-          <div className="lg:col-span-2 bg-[var(--card)] dark:bg-[#27272A] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
+          <div className="lg:col-span-2 bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
               <span className="text-[12px] font-semibold text-[var(--foreground)]">Próximos eventos</span>
               <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 transition-colors font-medium">
@@ -165,7 +165,7 @@ export default function DashboardPage() {
               const isEventToday = isToday(eventDate);
               return (
                 <div key={event.id}
-                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors duration-100 ${i !== upcomingEvents.length - 1 ? "border-b border-[var(--border)]" : ""}`}>
+                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/40 transition-colors duration-100 ${i !== upcomingEvents.length - 1 ? "border-b border-[var(--border)]" : ""}`}>
                   <div className="w-8 h-8 rounded-xl bg-[var(--secondary)] dark:bg-[#3F3F46] flex flex-col items-center justify-center shrink-0">
                     <p className="text-[8px] text-[var(--muted-foreground)] uppercase leading-none">{format(eventDate, "MMM", { locale: ptBR })}</p>
                     <p className={`text-[12px] font-bold leading-none mt-0.5 ${isEventToday ? "text-zinc-900 dark:text-white font-bold" : "text-[var(--foreground)]"}`}>{format(eventDate, "d")}</p>
@@ -183,7 +183,7 @@ export default function DashboardPage() {
 
         {/* Priority tasks */}
         {highPriTasks.length > 0 && (
-          <div className="bg-[var(--card)] dark:bg-[#27272A] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
+          <div className="bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
               <div className="flex items-center gap-2">
                 <span className="text-[12px] font-semibold text-[var(--foreground)]">Tarefas urgentes</span>
@@ -197,7 +197,7 @@ export default function DashboardPage() {
               const cat = CATEGORY_MAP[task.categoryId];
               return (
                 <div key={task.id}
-                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors duration-100 ${i !== Math.min(highPriTasks.length, 5) - 1 ? "border-b border-[var(--border)]" : ""}`}>
+                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/40 transition-colors duration-100 ${i !== Math.min(highPriTasks.length, 5) - 1 ? "border-b border-[var(--border)]" : ""}`}>
                   {statusIcon[task.status]}
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] font-medium text-[var(--foreground)] truncate">{task.title}</p>

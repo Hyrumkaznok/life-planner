@@ -61,31 +61,49 @@
   --sidebar-active: #FFFFFF;
 }
 
-/* ── Dark theme ──────────────────────────────────────────────────────────── */
+/* ── Dark theme — premium palette ────────────────────────────────────────── */
 .dark {
+  /* Base */
   --background: #09090B;
   --foreground: #FAFAFA;
-  --card: #27272A;
+
+  /* Surfaces */
+  --card: #18181B;
   --card-foreground: #FAFAFA;
-  --popover: #27272A;
+  --popover: #1F1F23;
   --popover-foreground: #FAFAFA;
-  --primary: #A1A1AA;
+  --surface: #111113;
+  --surface-elevated: #1F1F23;
+
+  /* Brand */
+  --primary: #8B5CF6;
   --primary-foreground: #FFFFFF;
-  --secondary: #18181B;
-  --secondary-foreground: #FAFAFA;
-  --muted: #18181B;
-  --muted-foreground: #A1A1AA;
-  --accent: #3F3F46;
+  --primary-hover: #7C3AED;
+
+  /* Secondary / muted */
+  --secondary: #111113;
+  --secondary-foreground: #A1A1AA;
+  --muted: #111113;
+  --muted-foreground: #71717A;
+
+  /* Accent / state */
+  --accent: #1F1F23;
   --accent-foreground: #FAFAFA;
   --destructive: #EF4444;
-  --border: #3F3F46;
-  --input: #3F3F46;
-  --ring: #A1A1AA;
-  --sidebar-bg: #09090B;
-  --sidebar-hover: #18181B;
+
+  /* Structure */
+  --border: #27272A;
+  --input: #1F1F23;
+  --ring: #8B5CF6;
+
+  /* Sidebar */
+  --sidebar-bg: #050507;
+  --sidebar-hover: #111113;
+  --sidebar-active-bg: rgba(139, 92, 246, 0.1);
+  --sidebar-active-border: rgba(139, 92, 246, 0.25);
   --sidebar-text: #FAFAFA;
-  --sidebar-icon: #71717A;
-  --sidebar-active: #FFFFFF;
+  --sidebar-icon: #52525B;
+  --sidebar-active: #C4B5FD;
 }
 
 /* ── Base ────────────────────────────────────────────────────────────────── */
@@ -105,6 +123,20 @@
     background-color: #18181B;
     color: #FFFFFF;
   }
+  .dark ::selection {
+    background-color: rgba(139, 92, 246, 0.35);
+    color: #FAFAFA;
+  }
+}
+
+/* ── Theme transition ─────────────────────────────────────────────────────── */
+html {
+  transition: background-color 0.25s ease;
+}
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
 }
 
 /* ── Premium shadow utilities ─────────────────────────────────────────────── */
@@ -150,7 +182,22 @@
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
-.dark ::-webkit-scrollbar-thumb { background: #3F3F46; }
+.dark ::-webkit-scrollbar-thumb { background: #27272A; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #3F3F46; }
+
+/* ── Dark mode — primary action buttons become purple ─────────────────────── */
+.dark button[class*="bg-zinc-900"]:not(:disabled),
+.dark a[class*="bg-zinc-900"] {
+  background-color: #8B5CF6;
+}
+.dark button[class*="bg-zinc-900"]:hover:not(:disabled),
+.dark a[class*="bg-zinc-900"]:hover {
+  background-color: #7C3AED;
+}
+.dark button[class*="bg-zinc-800"]:not(:disabled),
+.dark a[class*="bg-zinc-800"] {
+  background-color: #8B5CF6;
+}
 
 /* ── Transitions ─────────────────────────────────────────────────────────── */
 .transition-premium {
@@ -203,8 +250,8 @@
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
 }
 .dark .auth-input:focus {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
 }
 
 .auth-label {

@@ -92,7 +92,7 @@ export default function EstatisticasPage() {
 
         {/* ── Cards: horas semanais ─────────────────────────────────────────── */}
         <div>
-          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Esta semana</h2>
+          <h2 className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-widest mb-3">Esta semana</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { icon: Clock,     label: "Horas planejadas",   value: formatDuration(totalPlannedMins),   sub: `${weekEvents.length} evento${weekEvents.length !== 1 ? "s" : ""}`, gradient: "from-slate-700 to-slate-900" },
@@ -111,14 +111,14 @@ export default function EstatisticasPage() {
 
           {/* Barra de progresso geral */}
           {totalPlannedMins > 0 && (
-            <div className="mt-4 bg-white dark:bg-slate-800 rounded-2xl p-5 card-shadow">
+            <div className="mt-4 bg-[var(--card)] rounded-2xl p-5 card-shadow">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-bold text-slate-800 dark:text-slate-100">Planejado × Concluído</p>
+                <p className="text-sm font-bold text-[var(--foreground)]">Planejado × Concluído</p>
                 <span className="text-xs font-semibold text-slate-500">
                   {formatDuration(totalCompletedMins)} de {formatDuration(totalPlannedMins)}
                 </span>
               </div>
-              <div className="h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+              <div className="h-3 bg-[var(--secondary)] rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700"
                   style={{ width: `${completionPct}%`, background: "linear-gradient(to right, #22C55E, #16A34A)" }}
@@ -131,11 +131,11 @@ export default function EstatisticasPage() {
 
         {/* ── Tempo por categoria ───────────────────────────────────────────── */}
         {hoursByCategory.length > 0 && (
-          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 card-shadow">
-            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">
+          <div className="bg-[var(--card)] rounded-2xl p-6 card-shadow">
+            <h3 className="text-sm font-bold text-[var(--foreground)] mb-1">
               Tempo por Categoria — Esta Semana
             </h3>
-            <p className="text-xs text-slate-400 mb-5">
+            <p className="text-xs text-[var(--muted-foreground)] mb-5">
               Apenas eventos marcados como concluídos · planejado vs realizado
             </p>
             <div className="space-y-4">
@@ -148,14 +148,14 @@ export default function EstatisticasPage() {
                         <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${cat.color}18` }}>
                           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.color }} />
                         </div>
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{cat.name}</span>
+                        <span className="text-sm font-medium text-[var(--foreground)]">{cat.name}</span>
                       </div>
                       <div className="text-right">
                         <span className="text-sm font-bold" style={{ color: cat.color }}>{formatDuration(cat.completedMins)}</span>
-                        <span className="text-xs text-slate-400 ml-1">/ {formatDuration(cat.plannedMins)}</span>
+                        <span className="text-xs text-[var(--muted-foreground)] ml-1">/ {formatDuration(cat.plannedMins)}</span>
                       </div>
                     </div>
-                    <div className="h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                    <div className="h-2.5 bg-[var(--secondary)] rounded-full overflow-hidden">
                       {/* Barra de fundo = planejado */}
                       <div className="h-full rounded-full transition-all duration-700"
                         style={{ width: `${pct}%`, backgroundColor: cat.color, opacity: 0.85 }} />
@@ -170,7 +170,7 @@ export default function EstatisticasPage() {
 
         {/* Summary cards */}
         <div>
-          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Resumo geral</h2>
+          <h2 className="text-xs font-bold text-[var(--muted-foreground)] uppercase tracking-widest mb-3">Resumo geral</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { icon: Calendar, label: "Total de Eventos", value: events.length, sub: `${todayEvents} hoje · ${thisWeekEvents} esta semana`, gradient: "from-green-700 to-green-900" },
@@ -190,13 +190,13 @@ export default function EstatisticasPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Habit bar chart */}
-          <div className="bg-white rounded-2xl p-6 card-shadow">
-            <h3 className="text-sm font-bold text-slate-800 mb-1">Hábitos — Últimos 7 Dias</h3>
-            <p className="text-xs text-slate-400 mb-5">Concluídos vs programados por dia</p>
+          <div className="bg-[var(--card)] rounded-2xl p-6 card-shadow">
+            <h3 className="text-sm font-bold text-[var(--foreground)] mb-1">Hábitos — Últimos 7 Dias</h3>
+            <p className="text-xs text-[var(--muted-foreground)] mb-5">Concluídos vs programados por dia</p>
             <div className="flex items-end justify-between gap-2 h-36">
               {habitWeekData.map(({ dayLabel, scheduled, completed, pct }) => (
                 <div key={dayLabel} className="flex flex-col items-center gap-1.5 flex-1">
-                  <div className="w-full flex flex-col justify-end rounded-xl overflow-hidden bg-slate-100 relative" style={{ height: "100px" }}>
+                  <div className="w-full flex flex-col justify-end rounded-xl overflow-hidden bg-[var(--secondary)] relative" style={{ height: "100px" }}>
                     <div className="w-full rounded-xl transition-all duration-500"
                       style={{ height: `${pct}%`, background: "linear-gradient(to top, #8B5CF6, #A78BFA)", minHeight: pct > 0 ? 6 : 0 }} />
                   </div>
@@ -208,27 +208,27 @@ export default function EstatisticasPage() {
           </div>
 
           {/* Task donut + breakdown */}
-          <div className="bg-white rounded-2xl p-6 card-shadow">
-            <h3 className="text-sm font-bold text-slate-800 mb-1">Distribuição de Tarefas</h3>
-            <p className="text-xs text-slate-400 mb-5">Por status e prioridade</p>
+          <div className="bg-[var(--card)] rounded-2xl p-6 card-shadow">
+            <h3 className="text-sm font-bold text-[var(--foreground)] mb-1">Distribuição de Tarefas</h3>
+            <p className="text-xs text-[var(--muted-foreground)] mb-5">Por status e prioridade</p>
             <div className="space-y-3">
               {tasksByStatus.map(({ label, count, color }) => (
                 <div key={label}>
                   <div className="flex justify-between text-xs mb-1.5">
                     <div className="flex items-center gap-1.5">
                       <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-                      <span className="text-slate-600 font-medium">{label}</span>
+                      <span className="text-[var(--foreground)] font-medium">{label}</span>
                     </div>
                     <span className="font-bold text-slate-700">{count}</span>
                   </div>
-                  <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                  <div className="h-2 rounded-full bg-[var(--secondary)] overflow-hidden">
                     <div className="h-full rounded-full transition-all duration-700"
                       style={{ width: `${totalTasks > 0 ? (count / totalTasks) * 100 : 0}%`, backgroundColor: color }} />
                   </div>
                 </div>
               ))}
 
-              <div className="border-t border-slate-100 pt-3 mt-3 grid grid-cols-3 gap-2">
+              <div className="border-t border-[var(--border)] pt-3 mt-3 grid grid-cols-3 gap-2">
                 {[
                   { label: "Alta", count: tasks.filter((t) => t.priority === "high").length, color: "#EF4444" },
                   { label: "Média", count: tasks.filter((t) => t.priority === "medium").length, color: "#F59E0B" },
@@ -245,9 +245,9 @@ export default function EstatisticasPage() {
         </div>
 
         {/* Events by category */}
-        <div className="bg-white rounded-2xl p-6 card-shadow">
-          <h3 className="text-sm font-bold text-slate-800 mb-1">Eventos por Categoria</h3>
-          <p className="text-xs text-slate-400 mb-5">{events.length} eventos registrados no total</p>
+        <div className="bg-[var(--card)] rounded-2xl p-6 card-shadow">
+          <h3 className="text-sm font-bold text-[var(--foreground)] mb-1">Eventos por Categoria</h3>
+          <p className="text-xs text-[var(--muted-foreground)] mb-5">{events.length} eventos registrados no total</p>
           {eventsByCategory.length === 0 ? (
             <p className="text-sm text-slate-400 text-center py-6">Nenhum evento cadastrado</p>
           ) : (
@@ -259,7 +259,7 @@ export default function EstatisticasPage() {
                     <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: cat.color }} />
                   </div>
                   <span className="text-sm text-slate-700 font-medium w-32 shrink-0">{cat.name}</span>
-                  <div className="flex-1 h-2 bg-slate-100 rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-[var(--secondary)] rounded-full overflow-hidden">
                     <div className="h-full rounded-full transition-all duration-700"
                       style={{ width: `${(cat.count / events.length) * 100}%`, backgroundColor: cat.color }} />
                   </div>
@@ -271,9 +271,9 @@ export default function EstatisticasPage() {
         </div>
 
         {/* Habit streaks */}
-        <div className="bg-white rounded-2xl p-6 card-shadow">
-          <h3 className="text-sm font-bold text-slate-800 mb-1">Sequências dos Hábitos</h3>
-          <p className="text-xs text-slate-400 mb-5">Dias consecutivos de cada hábito</p>
+        <div className="bg-[var(--card)] rounded-2xl p-6 card-shadow">
+          <h3 className="text-sm font-bold text-[var(--foreground)] mb-1">Sequências dos Hábitos</h3>
+          <p className="text-xs text-[var(--muted-foreground)] mb-5">Dias consecutivos de cada hábito</p>
           <div className="space-y-3">
             {habits.sort((a, b) => b.streak - a.streak).map((habit) => {
               const cat = CATEGORY_MAP[habit.categoryId];
@@ -288,7 +288,7 @@ export default function EstatisticasPage() {
                     <Flame className="w-3.5 h-3.5 text-orange-500" />
                     <span className="text-sm font-bold text-orange-600">{habit.streak}</span>
                   </div>
-                  <span className="text-xs text-slate-400 w-24 text-right">
+                  <span className="text-xs text-[var(--muted-foreground)] w-24 text-right">
                     {habit.completedDates.length} concluídos
                   </span>
                 </div>

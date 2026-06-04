@@ -89,7 +89,7 @@ export default function PerfilPage() {
 
       <div className="p-7 max-w-2xl space-y-6">
         {/* Avatar + preview */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 card-shadow p-6">
+        <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] card-shadow p-6">
           <div className="flex items-center gap-6">
             {/* Avatar preview */}
             <div
@@ -99,17 +99,17 @@ export default function PerfilPage() {
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-lg font-bold text-slate-900 dark:text-white truncate">
+              <p className="text-lg font-bold text-[var(--foreground)] truncate">
                 {name || "Seu nome"}
               </p>
-              <p className="text-sm text-slate-400 dark:text-slate-500 mt-0.5">{role || "Seu cargo / função"}</p>
-              <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">{email || "seu@email.com"}</p>
+              <p className="text-sm text-[var(--muted-foreground)] mt-0.5">{role || "Seu cargo / função"}</p>
+              <p className="text-xs text-[var(--muted-foreground)] mt-0.5">{email || "seu@email.com"}</p>
             </div>
           </div>
 
           {/* Color picker */}
           <div className="mt-5">
-            <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 block">
+            <Label className="text-xs font-semibold text-[var(--muted-foreground)] mb-2 block">
               <Palette className="w-3 h-3 inline mr-1" />
               Cor do avatar
             </Label>
@@ -132,24 +132,24 @@ export default function PerfilPage() {
         </div>
 
         {/* Form fields */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 card-shadow p-6 space-y-4">
-          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+        <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] card-shadow p-6 space-y-4">
+          <h2 className="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
             <User className="w-4 h-4 text-rose-500" /> Informações pessoais
           </h2>
 
           <div>
-            <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Nome completo</Label>
+            <Label className="text-xs font-semibold text-[var(--muted-foreground)]">Nome completo</Label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Seu nome completo"
-              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+              className="mt-1 w-full border border-[var(--border)] rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-700 dark:focus:ring-violet-500 bg-slate-50/50 dark:bg-[var(--input)] text-[var(--foreground)] placeholder:text-slate-300 dark:placeholder:text-[var(--muted-foreground)]"
             />
           </div>
 
           <div>
-            <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+            <Label className="text-xs font-semibold text-[var(--muted-foreground)]">
               <Briefcase className="w-3 h-3 inline mr-1" /> Cargo / Função
             </Label>
             <input
@@ -157,7 +157,7 @@ export default function PerfilPage() {
               value={role}
               onChange={(e) => setRole(e.target.value)}
               placeholder="Ex: Desenvolvedor(a), Estudante..."
-              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+              className="mt-1 w-full border border-[var(--border)] rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-700 dark:focus:ring-violet-500 bg-slate-50/50 dark:bg-[var(--input)] text-[var(--foreground)] placeholder:text-slate-300 dark:placeholder:text-[var(--muted-foreground)]"
             />
             <div className="flex flex-wrap gap-1.5 mt-2">
               {ROLE_SUGGESTIONS.map((s) => (
@@ -168,7 +168,7 @@ export default function PerfilPage() {
                     "text-[10px] px-2.5 py-1 rounded-full border transition-colors font-medium",
                     role === s
                       ? "bg-rose-500 text-white border-rose-500"
-                      : "bg-white dark:bg-slate-700 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-600 hover:border-rose-300"
+                      : "bg-[var(--secondary)] text-[var(--muted-foreground)] border-[var(--border)] hover:border-rose-400"
                   )}
                 >
                   {s}
@@ -178,7 +178,7 @@ export default function PerfilPage() {
           </div>
 
           <div>
-            <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+            <Label className="text-xs font-semibold text-[var(--muted-foreground)]">
               <Mail className="w-3 h-3 inline mr-1" /> E-mail
             </Label>
             <input
@@ -186,14 +186,14 @@ export default function PerfilPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="seu@email.com"
-              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+              className="mt-1 w-full border border-[var(--border)] rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-700 dark:focus:ring-violet-500 bg-slate-50/50 dark:bg-[var(--input)] text-[var(--foreground)] placeholder:text-slate-300 dark:placeholder:text-[var(--muted-foreground)]"
             />
           </div>
         </div>
 
         {/* Stats */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 card-shadow p-6">
-          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-4">Resumo da conta</h2>
+        <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] card-shadow p-6">
+          <h2 className="text-sm font-bold text-[var(--foreground)] mb-4">Resumo da conta</h2>
           <div className="grid grid-cols-3 gap-3">
             {[
               { label: "Eventos", value: events.length, color: "#E11D48" },
@@ -202,27 +202,27 @@ export default function PerfilPage() {
             ].map(({ label, value, color }) => (
               <div key={label} className="text-center p-4 rounded-xl" style={{ backgroundColor: `${color}10` }}>
                 <p className="text-2xl font-bold" style={{ color }}>{value}</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{label}</p>
+                <p className="text-xs text-[var(--muted-foreground)] mt-0.5">{label}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Alterar senha */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 card-shadow p-6">
-          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
+        <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] card-shadow p-6">
+          <h2 className="text-sm font-bold text-[var(--foreground)] mb-4 flex items-center gap-2">
             <Lock className="w-4 h-4 text-rose-500" /> Alterar senha
           </h2>
           <form onSubmit={handleChangePassword} className="space-y-3">
             <div>
-              <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Senha atual</Label>
+              <Label className="text-xs font-semibold text-[var(--muted-foreground)]">Senha atual</Label>
               <div className="relative mt-1">
                 <input
                   type={showCurrentPwd ? "text" : "password"}
                   value={currentPassword}
                   onChange={e => setCurrentPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+                  className="w-full border border-[var(--border)] rounded-xl px-3 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 dark:focus:ring-violet-500 bg-slate-50/50 dark:bg-[var(--input)] text-[var(--foreground)] placeholder:text-slate-300 dark:placeholder:text-[var(--muted-foreground)]"
                 />
                 <button type="button" onClick={() => setShowCurrentPwd(!showCurrentPwd)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
@@ -231,14 +231,14 @@ export default function PerfilPage() {
               </div>
             </div>
             <div>
-              <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Nova senha</Label>
+              <Label className="text-xs font-semibold text-[var(--muted-foreground)]">Nova senha</Label>
               <div className="relative mt-1">
                 <input
                   type={showNewPwd ? "text" : "password"}
                   value={newPassword}
                   onChange={e => setNewPassword(e.target.value)}
                   placeholder="Mínimo 8 caracteres"
-                  className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+                  className="w-full border border-[var(--border)] rounded-xl px-3 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 dark:focus:ring-violet-500 bg-slate-50/50 dark:bg-[var(--input)] text-[var(--foreground)] placeholder:text-slate-300 dark:placeholder:text-[var(--muted-foreground)]"
                 />
                 <button type="button" onClick={() => setShowNewPwd(!showNewPwd)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
@@ -247,30 +247,30 @@ export default function PerfilPage() {
               </div>
             </div>
             <div>
-              <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Confirmar nova senha</Label>
+              <Label className="text-xs font-semibold text-[var(--muted-foreground)]">Confirmar nova senha</Label>
               <input
                 type="password"
                 value={confirmNewPassword}
                 onChange={e => setConfirmNewPassword(e.target.value)}
                 placeholder="Repita a nova senha"
-                className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+                className="mt-1 w-full border border-[var(--border)] rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 dark:focus:ring-violet-500 bg-slate-50/50 dark:bg-[var(--input)] text-[var(--foreground)] placeholder:text-slate-300 dark:placeholder:text-[var(--muted-foreground)]"
               />
             </div>
             <Button type="submit" disabled={pwdLoading || !newPassword} size="sm"
-              className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-0">
+              className="bg-zinc-900 text-white border-0">
               {pwdLoading ? "Salvando…" : "Alterar senha"}
             </Button>
           </form>
         </div>
 
         {/* Conta / Logout */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 card-shadow p-6">
-          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">Conta</h2>
+        <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] card-shadow p-6">
+          <h2 className="text-sm font-bold text-[var(--foreground)] mb-1">Conta</h2>
           {user && (
-            <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
-              Conectado como <span className="font-medium text-slate-600 dark:text-slate-300">{user.email}</span>
+            <p className="text-xs text-[var(--muted-foreground)] mb-4">
+              Conectado como <span className="font-medium text-[var(--foreground)]">{user.email}</span>
               {user.provider !== 'email' && (
-                <span className="ml-1 text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-full uppercase font-semibold">
+                <span className="ml-1 text-[10px] bg-[var(--secondary)] text-[var(--muted-foreground)] px-1.5 py-0.5 rounded-full uppercase font-semibold">
                   {user.provider}
                 </span>
               )}
