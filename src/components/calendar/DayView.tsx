@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
 import { useCategoryMap } from "@/lib/useCategories";
 import { Event } from "@/lib/types";
 import { format, addDays, subDays, parseISO, isToday } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, Calendar, CheckSquare, Target } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, CheckSquare, Target, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
@@ -95,7 +95,15 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
 
   const [drag, setDrag] = useState<DragState | null>(null);
   const [previewMins, setPreviewMins] = useState<number | null>(null);
-  const columnRef = useRef<HTMLDivElement>(null);
+  const columnRef   = useRef<HTMLDivElement>(null);
+  const scrollRef   = useRef<HTMLDivElement>(null);
+
+  // Scroll para 07:00 ao montar
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 7 * HOUR_HEIGHT;
+    }
+  }, []);
 
   const currentDate = parseISO(selectedDate);
   const dayEvents = events
@@ -193,7 +201,7 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
         </p>
       </div>
 
-      <div className="flex flex-1 overflow-y-auto">
+      <div className="flex flex-1 overflow-y-auto" ref={scrollRef}>
         <div className="w-16 shrink-0 border-r border-slate-50">
           {HOURS.map((hour) => (
             <div key={hour} className="h-16 flex items-start justify-end pr-2.5 pt-1">
@@ -216,7 +224,8 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
 
           {dayEvents.map((event) => {
             const cat = CATEGORY_MAP[event.categoryId];
-            const isDragging = drag?.eventId === event.id;
+            const isDragging  = drag?.eventId === event.id;
+            const isCompleted = !!event.completed;
             return (
               <div
                 key={event.id}
@@ -227,16 +236,22 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
                 style={{
                   top: `${getTop(event)}px`,
                   height: `${getHeight(event)}px`,
-                  backgroundColor: `${cat.color}18`,
+                  backgroundColor: `${cat.color}${isCompleted ? "0e" : "18"}`,
                   borderLeft: `4px solid ${cat.color}`,
                   cursor: isDragging ? "grabbing" : "grab",
                   zIndex: isDragging ? 10 : 1,
+                  opacity: isDragging ? 0.35 : isCompleted ? 0.6 : 1,
                 }}
                 onClick={(e) => { e.stopPropagation(); if (!isDragging) onEventClick(event); }}
               >
-                <p className="text-sm font-bold truncate" style={{ color: cat.color }}>{event.title}</p>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  {isCompleted && <CheckCircle2 size={12} style={{ color: cat.color, opacity: 0.8, flexShrink: 0 }} />}
+                  <p className={`text-sm font-bold truncate ${isCompleted ? "line-through" : ""}`} style={{ color: cat.color }}>
+                    {event.title}
+                  </p>
+                </div>
                 {getHeight(event) >= 48 && (
-                  <p className="text-xs mt-0.5" style={{ color: cat.color, opacity: 0.75 }}>
+                  <p className="text-xs mt-0.5" style={{ color: cat.color, opacity: 0.6 }}>
                     {event.startTime} – {event.endTime}
                   </p>
                 )}

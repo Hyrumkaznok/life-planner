@@ -12,12 +12,22 @@ import { useCategories } from "@/lib/useCategories";
 import { Event, RecurrenceType } from "@/lib/types";
 import { useAppStore } from "@/lib/store";
 import { toast } from "sonner";
+import { CheckCircle2 } from "lucide-react";
 
 interface EventFormProps {
   open: boolean;
   onClose: () => void;
   initialDate?: string;
+  initialTime?: string;
   editEvent?: Event;
+}
+
+function addOneHour(time: string): string {
+  const [h, m] = time.split(":").map(Number);
+  const total = h * 60 + m + 60;
+  const nh = Math.floor(total / 60) % 24;
+  const nm = total % 60;
+  return `${nh.toString().padStart(2, "0")}:${nm.toString().padStart(2, "0")}`;
 }
 
 const RECURRENCE_OPTIONS: { value: RecurrenceType; label: string }[] = [
@@ -27,19 +37,23 @@ const RECURRENCE_OPTIONS: { value: RecurrenceType; label: string }[] = [
   { value: "monthly", label: "Mensalmente" },
 ];
 
-export function EventForm({ open, onClose, initialDate, editEvent }: EventFormProps) {
+export function EventForm({ open, onClose, initialDate, initialTime, editEvent }: EventFormProps) {
   const { addEvent, updateEvent, deleteEvent } = useAppStore();
   const allCategories = useCategories();
 
-  const [title, setTitle] = useState(editEvent?.title ?? "");
+  const defaultStart = editEvent?.startTime ?? initialTime ?? "09:00";
+  const defaultEnd   = editEvent?.endTime   ?? (initialTime ? addOneHour(initialTime) : "10:00");
+
+  const [title, setTitle]           = useState(editEvent?.title ?? "");
   const [categoryId, setCategoryId] = useState(editEvent?.categoryId ?? "work");
-  const [date, setDate] = useState(editEvent?.date ?? initialDate ?? "");
-  const [startTime, setStartTime] = useState(editEvent?.startTime ?? "09:00");
-  const [endTime, setEndTime] = useState(editEvent?.endTime ?? "10:00");
+  const [date, setDate]             = useState(editEvent?.date ?? initialDate ?? "");
+  const [startTime, setStartTime]   = useState(defaultStart);
+  const [endTime, setEndTime]       = useState(defaultEnd);
   const [description, setDescription] = useState(editEvent?.description ?? "");
-  const [location, setLocation] = useState(editEvent?.location ?? "");
+  const [location, setLocation]     = useState(editEvent?.location ?? "");
   const [recurrence, setRecurrence] = useState<RecurrenceType>(editEvent?.recurrence ?? "none");
-  const [confirmed, setConfirmed] = useState(editEvent?.confirmed ?? true);
+  const [confirmed, setConfirmed]   = useState(editEvent?.confirmed ?? true);
+  const [completed, setCompleted]   = useState(editEvent?.completed ?? false);
 
   // When start changes, push end forward if needed
   const handleStartChange = (t: string) => {
@@ -69,6 +83,7 @@ export function EventForm({ open, onClose, initialDate, editEvent }: EventFormPr
       location: location.trim() || undefined,
       recurrence,
       confirmed,
+      completed,
     };
     if (editEvent) {
       updateEvent(editEvent.id, data);
@@ -238,6 +253,22 @@ export function EventForm({ open, onClose, initialDate, editEvent }: EventFormPr
             </div>
             <Switch id="confirmed" checked={confirmed} onCheckedChange={setConfirmed} />
           </div>
+
+          {/* Concluído */}
+          <div className={`flex items-center justify-between py-2 px-3 rounded-xl transition-colors ${completed ? "bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-900/40" : "border border-transparent"}`}>
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className={`w-4 h-4 ${completed ? "text-green-500" : "text-slate-300"}`} />
+              <div>
+                <p className="text-sm font-medium text-slate-700">
+                  {completed ? "Evento concluído" : "Marcar como concluído"}
+                </p>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  {completed ? "Contabilizado nas estatísticas semanais" : "Contabiliza nas estatísticas semanais"}
+                </p>
+              </div>
+            </div>
+            <Switch id="completed" checked={completed} onCheckedChange={setCompleted} />
+          </div>
         </div>
 
         <DialogFooter className="flex-col sm:flex-row gap-2 pt-2">
@@ -251,7 +282,7 @@ export function EventForm({ open, onClose, initialDate, editEvent }: EventFormPr
             onClick={handleSave}
             className="bg-zinc-900 hover:bg-zinc-800 text-white border-0"
           >
-            Salvar
+            {completed ? <><CheckCircle2 className="w-3.5 h-3.5 mr-1.5" />Salvar concluído</> : "Salvar"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -6,7 +6,24 @@ import { useCategoryMap } from "@/lib/useCategories";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { format, subDays, startOfWeek, endOfWeek } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Flame, CheckSquare, Calendar, Target } from "lucide-react";
+import { Flame, CheckSquare, Calendar, Target, Clock, TrendingUp, Trophy, BarChart2 } from "lucide-react";
+
+// ── Helpers de duração ────────────────────────────────────────────────────────
+
+function calcDurationMins(startTime: string, endTime: string): number {
+  const [sh, sm] = startTime.split(":").map(Number);
+  const [eh, em] = endTime.split(":").map(Number);
+  return Math.max(0, (eh * 60 + em) - (sh * 60 + sm));
+}
+
+function formatDuration(mins: number): string {
+  if (mins === 0) return "0min";
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  if (h > 0 && m > 0) return `${h}h ${m}min`;
+  if (h > 0) return `${h}h`;
+  return `${m}min`;
+}
 
 export default function EstatisticasPage() {
   const { events, tasks, habits } = useAppStore();
@@ -43,6 +60,24 @@ export default function EstatisticasPage() {
     ...cat, count: events.filter((e) => e.categoryId === cat.id).length,
   })).filter((c) => c.count > 0).sort((a, b) => b.count - a.count);
 
+  // ── Estatísticas de tempo semanal ─────────────────────────────────────────
+  const weekEvents     = events.filter((e) => e.date >= thisWeekStart && e.date <= thisWeekEnd);
+  const weekCompleted  = weekEvents.filter((e) => !!e.completed);
+
+  const totalPlannedMins   = weekEvents.reduce((s, e) => s + calcDurationMins(e.startTime, e.endTime), 0);
+  const totalCompletedMins = weekCompleted.reduce((s, e) => s + calcDurationMins(e.startTime, e.endTime), 0);
+  const completionPct      = totalPlannedMins > 0 ? Math.round((totalCompletedMins / totalPlannedMins) * 100) : 0;
+
+  const hoursByCategory = CATEGORIES.map((cat) => {
+    const planned   = weekEvents.filter((e) => e.categoryId === cat.id);
+    const completed = planned.filter((e) => !!e.completed);
+    const plannedMins   = planned.reduce((s, e) => s + calcDurationMins(e.startTime, e.endTime), 0);
+    const completedMins = completed.reduce((s, e) => s + calcDurationMins(e.startTime, e.endTime), 0);
+    return { ...cat, plannedMins, completedMins, count: completed.length };
+  }).filter((c) => c.plannedMins > 0).sort((a, b) => b.completedMins - a.completedMins);
+
+  const topCategory = hoursByCategory[0] ?? null;
+
   const tasksByStatus = [
     { label: "Concluídas", count: completedTasks, color: "#22C55E", bg: "#22C55E15" },
     { label: "Em andamento", count: inProgressTasks, color: "#F59E0B", bg: "#F59E0B15" },
@@ -54,8 +89,89 @@ export default function EstatisticasPage() {
       <PageHeader title="Estatísticas" subtitle="Acompanhe seu progresso e evolução" />
 
       <div className="p-7 space-y-6">
+
+        {/* ── Cards: horas semanais ─────────────────────────────────────────── */}
+        <div>
+          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Esta semana</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { icon: Clock,     label: "Horas planejadas",   value: formatDuration(totalPlannedMins),   sub: `${weekEvents.length} evento${weekEvents.length !== 1 ? "s" : ""}`, gradient: "from-slate-700 to-slate-900" },
+              { icon: CheckSquare, label: "Horas concluídas", value: formatDuration(totalCompletedMins), sub: `${weekCompleted.length} concluído${weekCompleted.length !== 1 ? "s" : ""}`, gradient: "from-green-600 to-green-800" },
+              { icon: TrendingUp, label: "Taxa de conclusão", value: `${completionPct}%`,               sub: completionPct >= 70 ? "Ótimo ritmo!" : completionPct >= 40 ? "Em progresso" : "Continue firme", gradient: completionPct >= 70 ? "from-teal-600 to-teal-800" : completionPct >= 40 ? "from-amber-600 to-amber-800" : "from-zinc-600 to-zinc-800" },
+              { icon: Trophy,    label: "Categoria top",      value: topCategory?.name ?? "—",          sub: topCategory ? formatDuration(topCategory.completedMins) + " concluídas" : "Nenhum evento", gradient: "from-violet-600 to-violet-800" },
+            ].map(({ icon: Icon, label, value, sub, gradient }) => (
+              <div key={label} className={`bg-gradient-to-br ${gradient} rounded-2xl p-5 text-white shadow-elevated`}>
+                <Icon className="w-5 h-5 mb-3 opacity-80" />
+                <p className="text-2xl font-bold leading-tight">{value}</p>
+                <p className="text-sm font-medium mt-0.5 opacity-90">{label}</p>
+                <p className="text-[11px] mt-1 opacity-60">{sub}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Barra de progresso geral */}
+          {totalPlannedMins > 0 && (
+            <div className="mt-4 bg-white dark:bg-slate-800 rounded-2xl p-5 card-shadow">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm font-bold text-slate-800 dark:text-slate-100">Planejado × Concluído</p>
+                <span className="text-xs font-semibold text-slate-500">
+                  {formatDuration(totalCompletedMins)} de {formatDuration(totalPlannedMins)}
+                </span>
+              </div>
+              <div className="h-3 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-700"
+                  style={{ width: `${completionPct}%`, background: "linear-gradient(to right, #22C55E, #16A34A)" }}
+                />
+              </div>
+              <p className="text-[11px] text-slate-400 mt-1.5 text-right">{completionPct}% concluído</p>
+            </div>
+          )}
+        </div>
+
+        {/* ── Tempo por categoria ───────────────────────────────────────────── */}
+        {hoursByCategory.length > 0 && (
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 card-shadow">
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">
+              Tempo por Categoria — Esta Semana
+            </h3>
+            <p className="text-xs text-slate-400 mb-5">
+              Apenas eventos marcados como concluídos · planejado vs realizado
+            </p>
+            <div className="space-y-4">
+              {hoursByCategory.map((cat) => {
+                const pct = cat.plannedMins > 0 ? Math.round((cat.completedMins / cat.plannedMins) * 100) : 0;
+                return (
+                  <div key={cat.id}>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${cat.color}18` }}>
+                          <span className="w-2 h-2 rounded-full" style={{ backgroundColor: cat.color }} />
+                        </div>
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{cat.name}</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-sm font-bold" style={{ color: cat.color }}>{formatDuration(cat.completedMins)}</span>
+                        <span className="text-xs text-slate-400 ml-1">/ {formatDuration(cat.plannedMins)}</span>
+                      </div>
+                    </div>
+                    <div className="h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                      {/* Barra de fundo = planejado */}
+                      <div className="h-full rounded-full transition-all duration-700"
+                        style={{ width: `${pct}%`, backgroundColor: cat.color, opacity: 0.85 }} />
+                    </div>
+                    <p className="text-[10px] text-slate-400 mt-1">{pct}% concluído · {cat.count} evento{cat.count !== 1 ? "s" : ""}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Summary cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Resumo geral</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
             { icon: Calendar, label: "Total de Eventos", value: events.length, sub: `${todayEvents} hoje · ${thisWeekEvents} esta semana`, gradient: "from-green-700 to-green-900" },
             { icon: CheckSquare, label: "Tarefas Concluídas", value: completedTasks, sub: `de ${totalTasks} no total`, gradient: "from-teal-500 to-teal-700" },
@@ -70,6 +186,7 @@ export default function EstatisticasPage() {
             </div>
           ))}
         </div>
+        </div>{/* fim resumo geral */}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Habit bar chart */}

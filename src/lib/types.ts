@@ -33,6 +33,7 @@ export interface Event {
   location?: string;
   recurrence: RecurrenceType;
   confirmed: boolean;
+  completed?: boolean;
 }
 
 export type TaskPriority = "low" | "medium" | "high";

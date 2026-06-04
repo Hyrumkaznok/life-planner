@@ -166,13 +166,21 @@ export default function CalendarioPage() {
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [showHabitForm, setShowHabitForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | undefined>();
+  // Armazena data/hora clicada para pré-preencher o formulário
+  const [newEventDate, setNewEventDate] = useState<string | undefined>();
+  const [newEventTime, setNewEventTime] = useState<string | undefined>();
+  const [newEventKey, setNewEventKey] = useState(0);
+
   const handleEventClick = (event: Event) => {
     setEditingEvent(event);
     setShowEventForm(true);
   };
 
-  const handleCreateEvent = () => {
+  const handleCreateEvent = (date?: string, time?: string) => {
     setEditingEvent(undefined);
+    setNewEventDate(date ?? selectedDate);
+    setNewEventTime(time);
+    setNewEventKey((k) => k + 1);
     setShowEventForm(true);
   };
 
@@ -194,7 +202,7 @@ export default function CalendarioPage() {
           </TabsList>
         </Tabs>
         <Button
-          onClick={() => { setEditingEvent(undefined); setShowEventForm(true); }}
+          onClick={() => handleCreateEvent()}
           className="bg-zinc-900 hover:bg-zinc-800 text-white shadow-sm border-0"
           size="sm"
         >
@@ -210,10 +218,11 @@ export default function CalendarioPage() {
       </div>
 
       <EventForm
-        key={editingEvent?.id ?? "new"}
+        key={editingEvent?.id ?? `new-${newEventKey}`}
         open={showEventForm}
         onClose={() => { setShowEventForm(false); setEditingEvent(undefined); }}
-        initialDate={selectedDate}
+        initialDate={newEventDate ?? selectedDate}
+        initialTime={newEventTime}
         editEvent={editingEvent}
       />
       <QuickTaskDialog open={showTaskForm} onClose={() => setShowTaskForm(false)} />

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useAppStore } from "@/lib/store";
 import { useCategoryMap } from "@/lib/useCategories";
 import { Event } from "@/lib/types";
 import { startOfWeek, endOfWeek, eachDayOfInterval, format, parseISO, addWeeks, subWeeks, isToday } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, Calendar, CheckSquare, Target } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, CheckSquare, Target, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
@@ -62,7 +62,15 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
   const [slotMenu, setSlotMenu] = useState<{ x: number; y: number; date: string; time: string } | null>(null);
   const [drag, setDrag]         = useState<{ eventId: string; durationMins: number; grabOffsetMins: number } | null>(null);
   const [preview, setPreview]   = useState<{ date: string; startMins: number } | null>(null);
-  const columnRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const columnRefs  = useRef<Map<string, HTMLDivElement>>(new Map());
+  const scrollRef   = useRef<HTMLDivElement>(null);
+
+  // Scroll para 07:00 ao montar
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 7 * HOUR_HEIGHT;
+    }
+  }, []);
 
   const days        = eachDayOfInterval({ start: weekStart, end: endOfWeek(weekStart, { weekStartsOn: 1 }) });
   const eventsForDay = (day: Date) => events.filter((e) => e.date === format(day, "yyyy-MM-dd")).sort((a, b) => a.startTime.localeCompare(b.startTime));
@@ -125,7 +133,7 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
         })}
       </div>
 
-      <div className="flex flex-1 overflow-y-auto">
+      <div className="flex flex-1 overflow-y-auto" ref={scrollRef}>
         <div className="w-14 shrink-0 border-r border-[var(--border)]">
           {HOURS.map((h) => (
             <div key={h} className="h-14 flex items-start justify-end pr-3 pt-1.5">
@@ -151,15 +159,26 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
                 const cat = CATEGORY_MAP[event.categoryId];
                 if (!cat) return null;
                 const isDragging = drag?.eventId === event.id;
+                const isCompleted = !!event.completed;
                 return (
                   <div key={event.id} draggable onDragStart={(e) => handleDragStart(e, event)} onDragEnd={handleDragEnd}
                     className="absolute left-1 right-1 rounded-xl px-2 py-1.5 overflow-hidden select-none cursor-grab active:cursor-grabbing"
-                    style={{ top: `${getTop(event)}px`, height: `${getHeight(event)}px`, backgroundColor: `${cat.color}12`, borderLeft: `2.5px solid ${cat.color}`, opacity: isDragging ? 0.3 : 1, transition: "background-color 0.15s, opacity 0.15s" }}
+                    style={{
+                      top: `${getTop(event)}px`,
+                      height: `${getHeight(event)}px`,
+                      backgroundColor: `${cat.color}${isCompleted ? "0d" : "12"}`,
+                      borderLeft: `2.5px solid ${cat.color}`,
+                      opacity: isDragging ? 0.3 : isCompleted ? 0.6 : 1,
+                      transition: "background-color 0.15s, opacity 0.15s",
+                    }}
                     onMouseEnter={(e) => { if (!isDragging) (e.currentTarget as HTMLElement).style.backgroundColor = `${cat.color}22`; }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = `${cat.color}12`; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = `${cat.color}${isCompleted ? "0d" : "12"}`; }}
                     onClick={(e) => { e.stopPropagation(); if (!isDragging) onEventClick(event); }}>
-                    <p className="text-[11px] font-semibold truncate leading-tight" style={{ color: cat.color }}>{event.title}</p>
-                    {getHeight(event) >= 42 && <p className="text-[10px] mt-0.5 truncate" style={{ color: cat.color, opacity: 0.6 }}>{event.startTime} – {event.endTime}</p>}
+                    <div className="flex items-center gap-1 min-w-0">
+                      {isCompleted && <CheckCircle2 size={9} style={{ color: cat.color, opacity: 0.8, flexShrink: 0 }} />}
+                      <p className={`text-[11px] font-semibold truncate leading-tight ${isCompleted ? "line-through" : ""}`} style={{ color: cat.color }}>{event.title}</p>
+                    </div>
+                    {getHeight(event) >= 42 && <p className="text-[10px] mt-0.5 truncate" style={{ color: cat.color, opacity: 0.5 }}>{event.startTime} – {event.endTime}</p>}
                   </div>
                 );
               })}

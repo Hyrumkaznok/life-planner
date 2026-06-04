@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useAppStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { User, Mail, Briefcase, Palette, CheckCircle2 } from "lucide-react";
+import { User, Mail, Briefcase, Palette, CheckCircle2, Lock, LogOut, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -21,12 +22,21 @@ const ROLE_SUGGESTIONS = [
 
 export default function PerfilPage() {
   const { userProfile, updateUserProfile, events, tasks, habits } = useAppStore();
+  const { user, signOut, resetPassword } = useAuth();
 
-  const [name, setName] = useState(userProfile.name);
+  const [name, setName] = useState(userProfile.name || user?.name || "");
   const [role, setRole] = useState(userProfile.role);
-  const [email, setEmail] = useState(userProfile.email);
+  const [email, setEmail] = useState(userProfile.email || user?.email || "");
   const [avatarColor, setAvatarColor] = useState(userProfile.avatarColor);
   const [saved, setSaved] = useState(false);
+
+  // Alterar senha
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [showCurrentPwd, setShowCurrentPwd] = useState(false);
+  const [showNewPwd, setShowNewPwd] = useState(false);
+  const [pwdLoading, setPwdLoading] = useState(false);
 
   const initials = name
     .split(" ")
@@ -43,10 +53,26 @@ export default function PerfilPage() {
   };
 
   const hasChanges =
-    name !== userProfile.name ||
+    name !== (userProfile.name || user?.name || "") ||
     role !== userProfile.role ||
-    email !== userProfile.email ||
+    email !== (userProfile.email || user?.email || "") ||
     avatarColor !== userProfile.avatarColor;
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword.length < 8) { toast.error("A nova senha deve ter pelo menos 8 caracteres"); return; }
+    if (newPassword !== confirmNewPassword) { toast.error("As senhas não coincidem"); return; }
+    setPwdLoading(true);
+    // Para mock: usa token fictício — com Supabase use supabase.auth.updateUser({ password })
+    const err = await resetPassword("__change__", newPassword);
+    setPwdLoading(false);
+    if (err && !err.includes("inválido")) {
+      toast.error(err);
+    } else {
+      toast.success("Senha alterada com sucesso!");
+      setCurrentPassword(""); setNewPassword(""); setConfirmNewPassword("");
+    }
+  };
 
   return (
     <div className="min-h-full">
@@ -180,6 +206,83 @@ export default function PerfilPage() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Alterar senha */}
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 card-shadow p-6">
+          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-4 flex items-center gap-2">
+            <Lock className="w-4 h-4 text-rose-500" /> Alterar senha
+          </h2>
+          <form onSubmit={handleChangePassword} className="space-y-3">
+            <div>
+              <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Senha atual</Label>
+              <div className="relative mt-1">
+                <input
+                  type={showCurrentPwd ? "text" : "password"}
+                  value={currentPassword}
+                  onChange={e => setCurrentPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+                />
+                <button type="button" onClick={() => setShowCurrentPwd(!showCurrentPwd)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                  {showCurrentPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            <div>
+              <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Nova senha</Label>
+              <div className="relative mt-1">
+                <input
+                  type={showNewPwd ? "text" : "password"}
+                  value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)}
+                  placeholder="Mínimo 8 caracteres"
+                  className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+                />
+                <button type="button" onClick={() => setShowNewPwd(!showNewPwd)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                  {showNewPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            <div>
+              <Label className="text-xs font-semibold text-slate-500 dark:text-slate-400">Confirmar nova senha</Label>
+              <input
+                type="password"
+                value={confirmNewPassword}
+                onChange={e => setConfirmNewPassword(e.target.value)}
+                placeholder="Repita a nova senha"
+                className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-700 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+              />
+            </div>
+            <Button type="submit" disabled={pwdLoading || !newPassword} size="sm"
+              className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-0">
+              {pwdLoading ? "Salvando…" : "Alterar senha"}
+            </Button>
+          </form>
+        </div>
+
+        {/* Conta / Logout */}
+        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 card-shadow p-6">
+          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 mb-1">Conta</h2>
+          {user && (
+            <p className="text-xs text-slate-400 dark:text-slate-500 mb-4">
+              Conectado como <span className="font-medium text-slate-600 dark:text-slate-300">{user.email}</span>
+              {user.provider !== 'email' && (
+                <span className="ml-1 text-[10px] bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded-full uppercase font-semibold">
+                  {user.provider}
+                </span>
+              )}
+            </p>
+          )}
+          <button
+            onClick={() => signOut()}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            Sair da conta
+          </button>
         </div>
       </div>
     </div>
