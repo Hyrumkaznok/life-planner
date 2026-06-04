@@ -80,7 +80,7 @@ function CategoryManager() {
               placeholder="Nome da categoria"
               autoFocus
               onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-              className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-300"
+              className="w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder:text-slate-300"
             />
             {/* Color grid */}
             <div>
@@ -111,7 +111,7 @@ function CategoryManager() {
             </div>
 
             <div className="flex gap-2">
-              <Button onClick={handleAdd} size="sm" className="bg-gradient-to-r bg-indigo-500 text-white border-0 text-xs">
+              <Button onClick={handleAdd} size="sm" className="bg-indigo-500 text-white border-0 text-xs">
                 Criar categoria
               </Button>
               <Button onClick={() => { setAdding(false); setName(""); }} variant="outline" size="sm" className="text-xs">

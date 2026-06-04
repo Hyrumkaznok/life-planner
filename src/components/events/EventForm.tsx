@@ -109,7 +109,7 @@ export function EventForm({ open, onClose, initialDate, editEvent }: EventFormPr
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Nome do evento"
-              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-400 bg-slate-50/50 placeholder:text-slate-300"
+              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50 placeholder:text-slate-300"
             />
           </div>
 
@@ -152,7 +152,7 @@ export function EventForm({ open, onClose, initialDate, editEvent }: EventFormPr
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-400 bg-slate-50/50"
+              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50"
             />
           </div>
 
@@ -213,7 +213,7 @@ export function EventForm({ open, onClose, initialDate, editEvent }: EventFormPr
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Endereço ou link da reunião"
-              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 bg-slate-50/50 placeholder:text-slate-300"
+              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50 placeholder:text-slate-300"
             />
           </div>
 
@@ -249,7 +249,7 @@ export function EventForm({ open, onClose, initialDate, editEvent }: EventFormPr
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
           <Button
             onClick={handleSave}
-            className="bg-gradient-to-r bg-indigo-500 hover:hover:bg-indigo-600 text-white border-0"
+            className="bg-indigo-500 hover:bg-indigo-600 text-white border-0"
           >
             Salvar
           </Button>

@@ -49,7 +49,7 @@ function HabitFormDialog({ open, onClose, editHabit }: { open: boolean; onClose:
             <Label>Nome *</Label>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Meditação, Leitura..."
-              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-slate-50/50" />
+              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -95,7 +95,7 @@ function HabitFormDialog({ open, onClose, editHabit }: { open: boolean; onClose:
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-gradient-to-r bg-indigo-500 text-white border-0">Salvar</Button>
+          <Button onClick={handleSave} className="bg-indigo-500 text-white border-0">Salvar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -124,7 +124,7 @@ export default function HabitosPage() {
     <div className="min-h-full">
       <PageHeader title="Hábitos" subtitle="Construa rotinas consistentes dia após dia">
         <Button onClick={() => { setEditingHabit(undefined); setShowForm(true); }}
-          className="bg-gradient-to-r bg-indigo-500 hover:hover:bg-indigo-600 text-white border-0 shadow-sm"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white border-0 shadow-sm"
           size="sm">
           <Plus className="w-4 h-4 mr-1" /> Novo Hábito
         </Button>

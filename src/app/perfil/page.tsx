@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAppStore } from "@/lib/store";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { User, Mail, Briefcase, Palette, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
@@ -119,7 +118,7 @@ export default function PerfilPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Seu nome completo"
-              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-400 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
             />
           </div>
 
@@ -132,7 +131,7 @@ export default function PerfilPage() {
               value={role}
               onChange={(e) => setRole(e.target.value)}
               placeholder="Ex: Desenvolvedor(a), Estudante..."
-              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-400 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
             />
             <div className="flex flex-wrap gap-1.5 mt-2">
               {ROLE_SUGGESTIONS.map((s) => (
@@ -161,7 +160,7 @@ export default function PerfilPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="seu@email.com"
-              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-rose-400 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
+              className="mt-1 w-full border border-slate-200 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50 dark:bg-slate-700/50 text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500"
             />
           </div>
         </div>

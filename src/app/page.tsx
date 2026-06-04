@@ -7,8 +7,7 @@ import { EventForm } from "@/components/events/EventForm";
 import { Button } from "@/components/ui/button";
 import {
   Calendar, CheckSquare, Target, Flame,
-  Plus, Clock, ArrowRight, CheckCircle2,
-  Circle, AlertCircle, TrendingUp,
+  Plus, ArrowRight, CheckCircle2, Circle, AlertCircle,
 } from "lucide-react";
 import { format, isToday, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -21,134 +20,113 @@ const priorityStyle = {
 };
 const priorityLabel = { high: "Alta", medium: "Média", low: "Baixa" };
 const statusIcon = {
-  pending:     <Circle className="w-[15px] h-[15px] text-[#CBD5E1]" strokeWidth={1.75} />,
-  in_progress: <AlertCircle className="w-[15px] h-[15px] text-amber-400" strokeWidth={1.75} />,
-  completed:   <CheckCircle2 className="w-[15px] h-[15px] text-emerald-500" strokeWidth={1.75} />,
+  pending:     <Circle size={14} className="text-[var(--muted-foreground)] shrink-0" strokeWidth={1.5} />,
+  in_progress: <AlertCircle size={14} className="text-amber-400 shrink-0" strokeWidth={1.5} />,
+  completed:   <CheckCircle2 size={14} className="text-emerald-500 shrink-0" strokeWidth={1.5} />,
 };
-
-function StatCard({
-  icon: Icon, color, bg, label, value, sub, href,
-}: {
-  icon: React.ElementType; color: string; bg: string;
-  label: string; value: string | number; sub?: string; href: string;
-}) {
-  return (
-    <Link href={href}>
-      <div className="bg-[var(--card)] dark:bg-[#27272A] rounded-3xl p-5 shadow-card hover:shadow-card-hover transition-all duration-200 cursor-pointer border border-[var(--border)] group">
-        <div className={`w-9 h-9 rounded-2xl ${bg} flex items-center justify-center mb-4`}>
-          <Icon size={16} className={color} strokeWidth={1.75} />
-        </div>
-        <p className="text-2xl font-bold text-[var(--foreground)] tracking-tight">{value}</p>
-        <p className="text-[12px] font-medium text-[var(--foreground)] mt-0.5">{label}</p>
-        {sub && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5">{sub}</p>}
-      </div>
-    </Link>
-  );
-}
 
 export default function DashboardPage() {
   const { events, tasks, habits } = useAppStore();
   const CATEGORY_MAP = useCategoryMap();
   const [showEventForm, setShowEventForm] = useState(false);
 
-  const today = format(new Date(), "yyyy-MM-dd");
-  const hour  = new Date().getHours();
-  const greeting = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
-  const dateLabel = format(new Date(), "EEE, d 'de' MMMM", { locale: ptBR });
+  const today        = format(new Date(), "yyyy-MM-dd");
+  const dateLabel    = format(new Date(), "EEEE, d 'de' MMMM", { locale: ptBR });
+  const dateCapital  = dateLabel.charAt(0).toUpperCase() + dateLabel.slice(1);
 
-  const todayEvents = events.filter((e) => e.date === today).sort((a, b) => a.startTime.localeCompare(b.startTime));
+  const todayEvents  = events.filter((e) => e.date === today).sort((a, b) => a.startTime.localeCompare(b.startTime));
   const upcomingEvents = events
     .filter((e) => e.date >= today)
     .sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.startTime.localeCompare(b.startTime))
     .slice(0, 6);
-  const pendingTasks = tasks.filter((t) => t.status !== "completed");
-  const completedCount = tasks.filter((t) => t.status === "completed").length;
-  const todayHabits = habits.filter((h) => h.targetDays.includes(new Date().getDay()));
+
+  const pendingTasks    = tasks.filter((t) => t.status !== "completed");
+  const completedCount  = tasks.filter((t) => t.status === "completed").length;
+  const todayHabits     = habits.filter((h) => h.targetDays.includes(new Date().getDay()));
   const completedHabits = todayHabits.filter((h) => h.completedDates.includes(today));
-  const bestStreak = Math.max(...habits.map((h) => h.streak), 0);
-  const highPriorityTasks = pendingTasks.filter((t) => t.priority === "high");
+  const bestStreak      = Math.max(...habits.map((h) => h.streak), 0);
+  const highPriTasks    = pendingTasks.filter((t) => t.priority === "high");
+
+  const stats = [
+    { icon: Calendar,     color: "text-indigo-500", label: "Eventos hoje",    value: todayEvents.length,                                 href: "/calendario" },
+    { icon: CheckSquare,  color: "text-blue-500",   label: "Pendentes",       value: pendingTasks.length,                                href: "/tarefas"    },
+    { icon: CheckCircle2, color: "text-emerald-500",label: "Concluídas",      value: `${completedCount}/${tasks.length}`,                href: "/tarefas"    },
+    { icon: Target,       color: "text-violet-500", label: "Hábitos hoje",    value: `${completedHabits.length}/${todayHabits.length}`,  href: "/habitos"    },
+    { icon: Flame,        color: "text-orange-400", label: "Maior sequência", value: `${bestStreak}d`,                                  href: "/habitos"    },
+  ];
 
   return (
     <div className="min-h-full bg-[var(--background)]">
 
-      {/* ── Header ──────────────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden bg-[#0F172A] dark:bg-[#09090B] border-b border-white/[0.06]">
-        {/* Glassmorphism orbs */}
-        <div className="absolute -top-20 -left-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 right-10 w-48 h-48 bg-violet-500/8 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative px-8 py-7">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-[12px] text-slate-500 uppercase tracking-widest font-medium capitalize">{dateLabel}</p>
-              <h1 className="text-[28px] font-bold text-white tracking-tight mt-1">{greeting} 👋</h1>
-              <p className="text-[13px] text-slate-400 mt-1.5">
-                {todayEvents.length === 0 ? "Nenhum evento hoje." : (
-                  <>{todayEvents.length} evento{todayEvents.length > 1 ? "s" : ""} · {pendingTasks.length} tarefas pendentes</>
-                )}
-              </p>
-            </div>
-            <Button
-              onClick={() => setShowEventForm(true)}
-              className="bg-indigo-500 hover:bg-indigo-600 text-white border-0 rounded-2xl px-4 shadow-none h-9 text-[13px] font-medium transition-all duration-150"
-            >
-              <Plus size={14} className="mr-1.5" />
-              Novo evento
-            </Button>
-          </div>
+      {/* ── Header ────────────────────────────────────────────────────── */}
+      <div className="flex items-center justify-between px-8 py-5 bg-[var(--card)] dark:bg-[#18181B] border-b border-[var(--border)]">
+        <div>
+          <p className="text-[11px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest mb-0.5">
+            {dateCapital}
+          </p>
+          <h1 className="text-[22px] font-semibold text-[var(--foreground)] tracking-tight leading-none">
+            Dashboard
+          </h1>
         </div>
+        <Button
+          onClick={() => setShowEventForm(true)}
+          className="bg-indigo-500 hover:bg-indigo-600 text-white border-0 rounded-lg h-8 px-3 text-[12px] font-medium shadow-none transition-colors duration-150"
+        >
+          <Plus size={13} className="mr-1.5" strokeWidth={2} />
+          Novo evento
+        </Button>
       </div>
 
-      <div className="px-8 py-7 space-y-8 max-w-6xl">
+      {/* ── Stats strip ───────────────────────────────────────────────── */}
+      <div className="flex items-stretch bg-[var(--card)] dark:bg-[#18181B] border-b border-[var(--border)]">
+        {stats.map(({ icon: Icon, color, label, value, href }, i) => (
+          <Link key={href} href={href} className="flex-1 group">
+            <div className={`flex flex-col px-6 py-4 ${i !== 0 ? "border-l border-[var(--border)]" : ""} hover:bg-[var(--secondary)] dark:hover:bg-[#27272A] transition-colors duration-150`}>
+              <Icon size={14} className={`${color} mb-2`} strokeWidth={1.5} />
+              <span className="text-[19px] font-semibold text-[var(--foreground)] leading-none">{value}</span>
+              <span className="text-[11px] text-[var(--muted-foreground)] mt-1 font-normal">{label}</span>
+            </div>
+          </Link>
+        ))}
+      </div>
 
-        {/* ── Stat cards ──────────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
-          <StatCard icon={Calendar}    color="text-indigo-500"  bg="bg-indigo-50 dark:bg-indigo-950/50"  label="Eventos hoje"       value={todayEvents.length}                             href="/calendario" />
-          <StatCard icon={CheckSquare} color="text-blue-500"    bg="bg-blue-50 dark:bg-blue-950/50"      label="Tarefas pendentes"  value={pendingTasks.length}                            href="/tarefas" />
-          <StatCard icon={Target}      color="text-violet-500"  bg="bg-violet-50 dark:bg-violet-950/50"  label="Hábitos hoje"       value={`${completedHabits.length}/${todayHabits.length}`} href="/habitos" />
-          <StatCard icon={CheckCircle2}color="text-emerald-500" bg="bg-emerald-50 dark:bg-emerald-950/50" label="Concluídas"        value={completedCount}     sub={`de ${tasks.length} tarefas`} href="/tarefas" />
-          <StatCard icon={Flame}       color="text-orange-500"  bg="bg-orange-50 dark:bg-orange-950/50"  label="Melhor sequência"   value={`${bestStreak}d`}                               href="/habitos" />
-        </div>
+      {/* ── Content ───────────────────────────────────────────────────── */}
+      <div className="px-8 py-6 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
 
-        {/* ── Main grid ───────────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-
-          {/* Today's schedule */}
-          <div className="lg:col-span-3 bg-[var(--card)] dark:bg-[#27272A] rounded-3xl border border-[var(--border)] shadow-card overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
-              <p className="text-[13px] font-semibold text-[var(--foreground)]">Agenda de hoje</p>
-              <Link href="/calendario" className="flex items-center gap-1 text-[12px] text-indigo-500 hover:text-indigo-600 font-medium transition-colors">
-                Ver calendário <ArrowRight size={12} />
+          {/* Today */}
+          <div className="lg:col-span-3 bg-[var(--card)] dark:bg-[#27272A] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
+              <span className="text-[12px] font-semibold text-[var(--foreground)]">Agenda de hoje</span>
+              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-indigo-500 hover:text-indigo-400 transition-colors font-medium">
+                Ver calendário <ArrowRight size={11} strokeWidth={2} />
               </Link>
             </div>
-
             {todayEvents.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-14 text-center">
-                <div className="w-10 h-10 rounded-2xl bg-[var(--secondary)] flex items-center justify-center mb-3">
-                  <Calendar size={16} className="text-[var(--muted-foreground)]" strokeWidth={1.5} />
-                </div>
+              <div className="flex flex-col items-center justify-center py-12 text-center">
                 <p className="text-[13px] font-medium text-[var(--foreground)]">Nenhum evento hoje</p>
-                <p className="text-[12px] text-[var(--muted-foreground)] mt-1">Clique no calendário para adicionar</p>
+                <p className="text-[12px] text-[var(--muted-foreground)] mt-0.5">Clique em um horário no calendário</p>
               </div>
             ) : (
-              <div className="divide-y divide-[var(--border)]">
-                {todayEvents.map((event) => {
+              <div>
+                {todayEvents.map((event, i) => {
                   const cat = CATEGORY_MAP[event.categoryId];
                   if (!cat) return null;
                   return (
-                    <div key={event.id} className="flex items-center gap-4 px-6 py-3.5 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/40 transition-colors duration-150">
-                      <div className="text-right w-12 shrink-0">
-                        <p className="text-[13px] font-semibold text-[var(--foreground)]">{event.startTime}</p>
-                        <p className="text-[11px] text-[var(--muted-foreground)]">{event.endTime}</p>
+                    <div key={event.id}
+                      className={`flex items-center gap-3.5 px-5 py-3 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors duration-100 ${i !== todayEvents.length - 1 ? "border-b border-[var(--border)]" : ""}`}>
+                      <div className="text-right w-11 shrink-0">
+                        <p className="text-[12px] font-semibold text-[var(--foreground)] tabular-nums">{event.startTime}</p>
+                        <p className="text-[10px] text-[var(--muted-foreground)] tabular-nums">{event.endTime}</p>
                       </div>
-                      <div className="w-[3px] h-9 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+                      <div className="w-[2px] h-7 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
                       <div className="flex-1 min-w-0">
                         <p className="text-[13px] font-medium text-[var(--foreground)] truncate">{event.title}</p>
                         <div className="flex items-center gap-1.5 mt-0.5">
-                          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: cat.color }} />
-                          <span className="text-[11px] text-[var(--muted-foreground)]">{cat.name}</span>
+                          <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+                          <span className="text-[10px] text-[var(--muted-foreground)]">{cat.name}</span>
                           {!event.confirmed && (
-                            <span className="text-[10px] text-amber-500 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 rounded-lg">A confirmar</span>
+                            <span className="text-[10px] text-amber-500 bg-amber-50 dark:bg-amber-950/30 px-1.5 py-px rounded-md">A confirmar</span>
                           )}
                         </div>
                       </div>
@@ -159,82 +137,76 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Upcoming events */}
-          <div className="lg:col-span-2 bg-[var(--card)] dark:bg-[#27272A] rounded-3xl border border-[var(--border)] shadow-card overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
-              <p className="text-[13px] font-semibold text-[var(--foreground)]">Próximos eventos</p>
-              <Link href="/calendario" className="flex items-center gap-1 text-[12px] text-indigo-500 hover:text-indigo-600 font-medium transition-colors">
-                Ver todos <ArrowRight size={12} />
+          {/* Upcoming */}
+          <div className="lg:col-span-2 bg-[var(--card)] dark:bg-[#27272A] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
+              <span className="text-[12px] font-semibold text-[var(--foreground)]">Próximos eventos</span>
+              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-indigo-500 hover:text-indigo-400 transition-colors font-medium">
+                Ver todos <ArrowRight size={11} strokeWidth={2} />
               </Link>
             </div>
-            <div className="divide-y divide-[var(--border)]">
-              {upcomingEvents.length === 0 ? (
-                <p className="text-[13px] text-[var(--muted-foreground)] text-center py-10">Sem eventos próximos</p>
-              ) : upcomingEvents.map((event) => {
-                const cat = CATEGORY_MAP[event.categoryId];
-                if (!cat) return null;
-                const eventDate = parseISO(event.date);
-                const isEventToday = isToday(eventDate);
-                return (
-                  <div key={event.id} className="flex items-center gap-3 px-5 py-3 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/40 transition-colors duration-150">
-                    <div className="w-9 h-9 rounded-2xl bg-[var(--secondary)] dark:bg-[#3F3F46] flex flex-col items-center justify-center shrink-0">
-                      <p className="text-[9px] text-[var(--muted-foreground)] uppercase leading-none">{format(eventDate, "MMM", { locale: ptBR })}</p>
-                      <p className={`text-[13px] font-bold leading-none mt-0.5 ${isEventToday ? "text-indigo-500" : "text-[var(--foreground)]"}`}>{format(eventDate, "d")}</p>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[12px] font-medium text-[var(--foreground)] truncate">{event.title}</p>
-                      <div className="flex items-center gap-1 mt-0.5">
-                        <Clock size={10} className="text-[var(--muted-foreground)]" strokeWidth={1.75} />
-                        <p className="text-[11px] text-[var(--muted-foreground)]">{event.startTime}</p>
-                        {isEventToday && <span className="ml-1 text-[10px] text-indigo-500 font-semibold">Hoje</span>}
-                      </div>
-                    </div>
-                    <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+            {upcomingEvents.length === 0 ? (
+              <p className="text-[12px] text-[var(--muted-foreground)] text-center py-10">Sem eventos próximos</p>
+            ) : upcomingEvents.map((event, i) => {
+              const cat = CATEGORY_MAP[event.categoryId];
+              if (!cat) return null;
+              const eventDate = parseISO(event.date);
+              const isEventToday = isToday(eventDate);
+              return (
+                <div key={event.id}
+                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors duration-100 ${i !== upcomingEvents.length - 1 ? "border-b border-[var(--border)]" : ""}`}>
+                  <div className="w-8 h-8 rounded-xl bg-[var(--secondary)] dark:bg-[#3F3F46] flex flex-col items-center justify-center shrink-0">
+                    <p className="text-[8px] text-[var(--muted-foreground)] uppercase leading-none">{format(eventDate, "MMM", { locale: ptBR })}</p>
+                    <p className={`text-[12px] font-bold leading-none mt-0.5 ${isEventToday ? "text-indigo-500" : "text-[var(--foreground)]"}`}>{format(eventDate, "d")}</p>
                   </div>
-                );
-              })}
-            </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[12px] font-medium text-[var(--foreground)] truncate">{event.title}</p>
+                    <p className="text-[10px] text-[var(--muted-foreground)] tabular-nums">{event.startTime}{isEventToday ? " · Hoje" : ""}</p>
+                  </div>
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* ── Priority tasks ───────────────────────────────────────────── */}
-        {highPriorityTasks.length > 0 && (
-          <div className="bg-[var(--card)] dark:bg-[#27272A] rounded-3xl border border-[var(--border)] shadow-card overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
+        {/* Priority tasks */}
+        {highPriTasks.length > 0 && (
+          <div className="bg-[var(--card)] dark:bg-[#27272A] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
+            <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
               <div className="flex items-center gap-2">
-                <p className="text-[13px] font-semibold text-[var(--foreground)]">Tarefas urgentes</p>
-                <span className="text-[11px] font-semibold text-red-500 bg-red-50 dark:bg-red-950/40 px-2 py-0.5 rounded-lg">{highPriorityTasks.length}</span>
+                <span className="text-[12px] font-semibold text-[var(--foreground)]">Tarefas urgentes</span>
+                <span className="text-[10px] font-semibold text-red-500 bg-red-50 dark:bg-red-950/40 px-1.5 py-px rounded-md">{highPriTasks.length}</span>
               </div>
-              <Link href="/tarefas" className="flex items-center gap-1 text-[12px] text-indigo-500 hover:text-indigo-600 font-medium transition-colors">
-                Ver todas <ArrowRight size={12} />
+              <Link href="/tarefas" className="flex items-center gap-1 text-[11px] text-indigo-500 hover:text-indigo-400 transition-colors font-medium">
+                Ver todas <ArrowRight size={11} strokeWidth={2} />
               </Link>
             </div>
-            <div className="divide-y divide-[var(--border)]">
-              {highPriorityTasks.slice(0, 5).map((task) => {
-                const cat = CATEGORY_MAP[task.categoryId];
-                return (
-                  <div key={task.id} className="flex items-center gap-3 px-6 py-3.5 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/40 transition-colors duration-150">
-                    {statusIcon[task.status]}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-medium text-[var(--foreground)] truncate">{task.title}</p>
-                      {task.dueDate && (
-                        <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5">
-                          Prazo: {format(parseISO(task.dueDate), "d/MM/yyyy")}
-                        </p>
-                      )}
-                    </div>
-                    {cat && (
-                      <span className="text-[11px] px-2 py-0.5 rounded-lg shrink-0 font-medium" style={{ color: cat.color, backgroundColor: `${cat.color}15` }}>
-                        {cat.name}
-                      </span>
+            {highPriTasks.slice(0, 5).map((task, i) => {
+              const cat = CATEGORY_MAP[task.categoryId];
+              return (
+                <div key={task.id}
+                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[#3F3F46]/30 transition-colors duration-100 ${i !== Math.min(highPriTasks.length, 5) - 1 ? "border-b border-[var(--border)]" : ""}`}>
+                  {statusIcon[task.status]}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-medium text-[var(--foreground)] truncate">{task.title}</p>
+                    {task.dueDate && (
+                      <p className="text-[10px] text-[var(--muted-foreground)]">
+                        Prazo: {format(parseISO(task.dueDate), "d/MM/yyyy")}
+                      </p>
                     )}
-                    <span className={`text-[11px] px-2 py-0.5 rounded-lg font-medium shrink-0 ${priorityStyle[task.priority]}`}>
-                      {priorityLabel[task.priority]}
-                    </span>
                   </div>
-                );
-              })}
-            </div>
+                  {cat && (
+                    <span className="text-[10px] px-1.5 py-px rounded-md font-medium shrink-0" style={{ color: cat.color, backgroundColor: `${cat.color}15` }}>
+                      {cat.name}
+                    </span>
+                  )}
+                  <span className={`text-[10px] px-1.5 py-px rounded-md font-medium shrink-0 ${priorityStyle[task.priority]}`}>
+                    {priorityLabel[task.priority]}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

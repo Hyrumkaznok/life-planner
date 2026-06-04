@@ -62,7 +62,7 @@ function TaskFormDialog({ open, onClose, editTask }: { open: boolean; onClose: (
             <Label>Título *</Label>
             <input type="text" value={title} onChange={(e) => setTitle(e.target.value)}
               placeholder="Descrição da tarefa"
-              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-slate-50/50" />
+              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50" />
           </div>
           <div>
             <Label>Categoria</Label>
@@ -106,7 +106,7 @@ function TaskFormDialog({ open, onClose, editTask }: { open: boolean; onClose: (
           <div>
             <Label>Prazo</Label>
             <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)}
-              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 bg-slate-50/50" />
+              className="mt-1 w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50/50" />
           </div>
           <div>
             <Label>Descrição</Label>
@@ -116,7 +116,7 @@ function TaskFormDialog({ open, onClose, editTask }: { open: boolean; onClose: (
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
-          <Button onClick={handleSave} className="bg-gradient-to-r bg-indigo-500 text-white border-0">Salvar</Button>
+          <Button onClick={handleSave} className="bg-indigo-500 text-white border-0">Salvar</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -247,7 +247,7 @@ export default function TarefasPage() {
     <div className="min-h-full">
       <PageHeader title="Tarefas" subtitle="Gerencie e acompanhe suas tarefas">
         <Button onClick={() => { setEditingTask(undefined); setShowForm(true); }}
-          className="bg-gradient-to-r bg-indigo-500 hover:hover:bg-indigo-600 text-white border-0 shadow-sm"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white border-0 shadow-sm"
           size="sm">
           <Plus className="w-4 h-4 mr-1" /> Nova Tarefa
         </Button>

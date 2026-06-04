@@ -43,7 +43,7 @@ function QuickTaskDialog({ open, onClose }: { open: boolean; onClose: () => void
             <input
               type="text" value={title} onChange={(e) => setTitle(e.target.value)}
               placeholder="O que precisa ser feito?"
-              className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="mt-1 w-full border border-[var(--border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">
@@ -113,7 +113,7 @@ function QuickHabitDialog({ open, onClose }: { open: boolean; onClose: () => voi
             <input
               type="text" value={name} onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Meditação, Leitura..."
-              className="mt-1 w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="mt-1 w-full border border-[var(--border)] rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div>
@@ -142,7 +142,7 @@ function QuickHabitDialog({ open, onClose }: { open: boolean; onClose: () => voi
                   className={`w-9 h-9 rounded-full text-xs font-medium border transition-colors ${
                     targetDays.includes(i)
                       ? "bg-rose-600 text-white border-rose-600"
-                      : "bg-white text-gray-600 border-gray-200 hover:border-rose-300"
+                      : "bg-white text-[var(--foreground)] border-[var(--border)] hover:border-indigo-300"
                   }`}
                 >
                   {label}
@@ -195,7 +195,7 @@ export default function CalendarioPage() {
         </Tabs>
         <Button
           onClick={() => { setEditingEvent(undefined); setShowEventForm(true); }}
-          className="bg-gradient-to-r bg-indigo-500 hover:hover:bg-indigo-600 text-white shadow-sm border-0"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white shadow-sm border-0"
           size="sm"
         >
           <Plus className="w-4 h-4 mr-1" />
