@@ -215,12 +215,12 @@ export default function TarefasPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | undefined>();
   const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
-  const [filterStatus, setFilterStatus] = useState<TaskStatus | "all">("all");
-  const [filterPriority, setFilterPriority] = useState<TaskPriority | "all">("all");
+  const [filterStatus, setFilterStatus] = useState<TaskStatus | "todos">("todos");
+  const [filterPriority, setFilterPriority] = useState<TaskPriority | "todos">("todos");
 
   const filtered = tasks.filter((t) => {
-    if (filterStatus !== "all" && t.status !== filterStatus) return false;
-    if (filterPriority !== "all" && t.priority !== filterPriority) return false;
+    if (filterStatus !== "todos" && t.status !== filterStatus) return false;
+    if (filterPriority !== "todos" && t.priority !== filterPriority) return false;
     return true;
   });
 
@@ -282,7 +282,7 @@ export default function TarefasPage() {
           <Select value={filterStatus} onValueChange={(v) => v && setFilterStatus(v as typeof filterStatus)}>
             <SelectTrigger className="h-7 flex-1 sm:flex-none sm:w-36 text-xs border-slate-200"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todos os status</SelectItem>
+              <SelectItem value="todos">Todos os status</SelectItem>
               <SelectItem value="pending">Pendente</SelectItem>
               <SelectItem value="in_progress">Em andamento</SelectItem>
               <SelectItem value="completed">Concluída</SelectItem>
@@ -291,7 +291,7 @@ export default function TarefasPage() {
           <Select value={filterPriority} onValueChange={(v) => v && setFilterPriority(v as typeof filterPriority)}>
             <SelectTrigger className="h-7 flex-1 sm:flex-none sm:w-36 text-xs border-slate-200"><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Todas as prio.</SelectItem>
+              <SelectItem value="todos">Todas as prio.</SelectItem>
               <SelectItem value="high">Alta</SelectItem>
               <SelectItem value="medium">Média</SelectItem>
               <SelectItem value="low">Baixa</SelectItem>
