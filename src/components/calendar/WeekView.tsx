@@ -131,7 +131,7 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
           return (
             <div key={day.toISOString()} className="flex-1 text-center py-3 cursor-pointer hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/30 transition-colors" onClick={() => setSelectedDate(format(day, "yyyy-MM-dd"))}>
               <p className="text-[10px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest">{format(day, "EEE", { locale: ptBR })}</p>
-              <div className={`mx-auto mt-1.5 w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-semibold transition-all ${tf ? "bg-gradient-to-br from-violet-500 to-indigo-600 text-white shadow-[0_0_12px_rgba(139,92,246,0.6)] animate-pulse-glow" : "text-[var(--foreground)]"}`}>{format(day, "d")}</div>
+              <div className={`mx-auto mt-1.5 w-7 h-7 flex items-center justify-center rounded-full text-[13px] font-semibold ${tf ? "bg-zinc-900 dark:bg-violet-600 text-white" : "text-[var(--foreground)]"}`}>{format(day, "d")}</div>
             </div>
           );
         })}

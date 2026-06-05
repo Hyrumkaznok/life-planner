@@ -70,19 +70,18 @@ export default function DashboardPage() {
     <div className="min-h-full bg-[var(--background)]">
 
       {/* ── Header ────────────────────────────────────────────────────── */}
-      <div className="relative flex items-center justify-between px-4 py-3.5 sm:px-8 sm:py-5 bg-[var(--card)] dark:bg-[var(--secondary)] border-b border-[var(--border)] overflow-hidden">
-        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-violet-500/40 to-transparent dark:via-violet-500/60" />
+      <div className="flex items-center justify-between px-4 py-3.5 sm:px-8 sm:py-5 bg-[var(--card)] dark:bg-[var(--secondary)] border-b border-[var(--border)]">
         <div>
           <p className="text-[11px] font-medium text-[var(--muted-foreground)] uppercase tracking-widest mb-0.5">
             {dateCapital}
           </p>
-          <h1 className="text-[22px] font-bold text-gradient tracking-tight leading-none animate-enter">
+          <h1 className="text-[22px] font-semibold text-[var(--foreground)] tracking-tight leading-none">
             Início
           </h1>
         </div>
         <Button
           onClick={() => setShowEventForm(true)}
-          className="btn-shine bg-zinc-900 hover:bg-zinc-800 text-white border-0 rounded-lg h-8 px-3 text-[12px] font-medium shadow-none"
+          className="btn-shine bg-zinc-900 hover:bg-zinc-800 text-white border-0 rounded-lg h-8 px-3 text-[12px] font-medium shadow-none transition-colors duration-150"
         >
           <Plus size={13} className="mr-1.5" strokeWidth={2} />
           Novo evento
@@ -99,8 +98,8 @@ export default function DashboardPage() {
             style={{ animationDelay: `${i * 60}ms` }}
           >
             <div className={`flex flex-col px-4 sm:px-6 py-3 sm:py-4 ${i !== 0 ? "border-l border-[var(--border)]" : ""} hover:bg-[var(--secondary)] dark:hover:bg-[var(--card)] transition-colors duration-150`}>
-              <Icon size={14} className={`${color} mb-2 dark:drop-shadow-[0_0_4px_currentColor]`} strokeWidth={1.5} />
-              <span className="text-[17px] sm:text-[19px] font-bold leading-none tabular-nums text-gradient-value dark:text-gradient">{value}</span>
+              <Icon size={14} className={`${color} mb-2`} strokeWidth={1.5} />
+              <span className="text-[17px] sm:text-[19px] font-semibold text-[var(--foreground)] leading-none tabular-nums">{value}</span>
               <span className="text-[10px] sm:text-[11px] text-[var(--muted-foreground)] mt-1 font-normal">{label}</span>
             </div>
           </Link>

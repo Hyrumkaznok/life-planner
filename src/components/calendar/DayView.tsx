@@ -177,7 +177,7 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
             <p className="text-sm font-semibold text-slate-700 capitalize">
               {format(currentDate, "EEEE, d 'de' MMMM", { locale: ptBR })}
             </p>
-            {todayFlag && <p className="text-xs text-violet-500 dark:text-violet-400 font-semibold">Hoje</p>}
+            {todayFlag && <p className="text-xs text-rose-500 font-medium">Hoje</p>}
           </div>
           <button onClick={() => setSelectedDate(format(addDays(currentDate, 1), "yyyy-MM-dd"))}
             className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-slate-100 transition-colors text-slate-500">
