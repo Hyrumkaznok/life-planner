@@ -32,9 +32,9 @@ export interface Event {
   description?: string;
   location?: string;
   recurrence: RecurrenceType;
-  recurrenceDays?: number[]; // 0=Dom, 1=Seg, ..., 6=Sáb — used when recurrence === "custom"
+  recurrenceDays?: number[]; // 0=Dom, 1=Seg, ..., 6=Sáb — usado quando recurrence === "personalizada"
   confirmed: boolean;
-  completed?: boolean;
+  completedDates?: string[]; // datas (yyyy-MM-dd) em que este evento foi concluído
 }
 
 export type TaskPriority = "low" | "medium" | "high";

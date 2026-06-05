@@ -129,17 +129,22 @@ interface TaskCardProps {
   onToggle: (t: Task) => void; onEdit: (t: Task) => void; onDelete: (id: string) => void;
 }
 
-function TaskCard({ task, today, categoryMap, onToggle, onEdit, onDelete }: TaskCardProps) {
+function TaskCard({ task, today, categoryMap, onToggle, onEdit, onDelete, index = 0 }: TaskCardProps & { index?: number }) {
   const cat = categoryMap[task.categoryId] ?? { name: "—", color: "#94A3B8" };
   const p = PRIORITY_CONFIG[task.priority];
   const s = STATUS_CONFIG[task.status];
   const isOverdue = task.dueDate && task.dueDate < today && task.status !== "completed";
 
   return (
-    <div className={cn(
-      "group bg-white rounded-2xl border border-slate-100 p-4 card-shadow card-shadow-hover transition-all duration-200",
-      task.status === "completed" && "opacity-55"
-    )}>
+    <div
+      className={cn(
+        "group bg-white dark:bg-[var(--card)] rounded-2xl border border-slate-100 dark:border-[var(--border)] p-4 card-shadow card-shadow-hover animate-enter",
+        task.status === "completed" && "opacity-55"
+      )}
+      style={{ animationDelay: `${index * 45}ms` }}
+      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 32px ${cat.color}28, 0 2px 8px ${cat.color}14`; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = ""; }}
+    >
       <div className="flex items-start gap-3">
         <button onClick={() => onToggle(task)} className="mt-0.5 shrink-0 transition-transform hover:scale-110">
           {s.icon}
@@ -200,9 +205,9 @@ function TaskGroup({ title, items, color, today, categoryMap, onToggle, onEdit, 
         <span className="text-xs text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-full">{items.length}</span>
       </div>
       <div className="space-y-2">
-        {items.map((task) => (
+        {items.map((task, i) => (
           <TaskCard key={task.id} task={task} today={today} categoryMap={categoryMap}
-            onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} />
+            onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} index={i} />
         ))}
       </div>
     </div>

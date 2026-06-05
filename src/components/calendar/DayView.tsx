@@ -5,7 +5,7 @@ import { useAppStore } from "@/lib/store";
 import { useCategoryMap } from "@/lib/useCategories";
 import { Event } from "@/lib/types";
 import { format, addDays, subDays, parseISO, isToday } from "date-fns";
-import { eventAppliesToDate } from "@/lib/utils";
+import { eventAppliesToDate, isEventCompleted } from "@/lib/utils";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Calendar, CheckSquare, Target, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
@@ -90,7 +90,7 @@ interface DragState {
 }
 
 export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHabit }: DayViewProps) {
-  const { events, selectedDate, setSelectedDate, updateEvent } = useAppStore();
+  const { events, selectedDate, setSelectedDate, updateEvent, toggleEventComplete } = useAppStore();
   const CATEGORY_MAP = useCategoryMap();
   const [slotMenu, setSlotMenu] = useState<{ x: number; y: number; date: string; time: string } | null>(null);
 
@@ -226,7 +226,7 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
           {dayEvents.map((event) => {
             const cat = CATEGORY_MAP[event.categoryId];
             const isDragging  = drag?.eventId === event.id;
-            const isCompleted = !!event.completed;
+            const isCompleted = isEventCompleted(event, selectedDate);
             return (
               <div
                 key={event.id}
@@ -247,7 +247,7 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
               >
                 <div className="flex items-center gap-1.5 min-w-0">
                   <button
-                    onClick={(e) => { e.stopPropagation(); updateEvent(event.id, { completed: !isCompleted }); }}
+                    onClick={(e) => { e.stopPropagation(); toggleEventComplete(event.id, selectedDate); }}
                     className="shrink-0 hover:scale-110 transition-transform"
                     aria-label={isCompleted ? "Marcar como pendente" : "Marcar como concluído"}
                   >

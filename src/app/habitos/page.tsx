@@ -180,9 +180,13 @@ export default function HabitosPage() {
               return (
                 <div key={habit.id}
                   className={cn(
-                    "group bg-white rounded-2xl border border-slate-100 p-5 card-shadow card-shadow-hover transition-all duration-200",
-                    isCompletedToday && "border-emerald-100 bg-gradient-to-r from-emerald-50/50 to-white"
-                  )}>
+                    "group bg-white dark:bg-[var(--card)] rounded-2xl border border-slate-100 dark:border-[var(--border)] p-5 card-shadow card-shadow-hover animate-enter",
+                    isCompletedToday && "border-emerald-100 bg-gradient-to-r from-emerald-50/50 to-white dark:from-emerald-950/20 dark:to-[var(--card)]"
+                  )}
+                  style={{ animationDelay: `${habits.indexOf(habit) * 50}ms` }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 32px ${cat.color}28, 0 2px 8px ${cat.color}14`; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = ""; }}
+                >
                   <div className="flex items-start gap-4">
                     {/* Check button */}
                     <button

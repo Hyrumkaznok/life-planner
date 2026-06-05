@@ -60,11 +60,18 @@ const FREQ_MAP: Record<string, string> = { daily: "diaria", weekly: "semanal" };
 const VIEW_MAP: Record<string, string> = { day: "dia", week: "semana", month: "mes" };
 
 function migrateEvents(events: Event[]): Event[] {
-  return events.map((e) => ({
-    ...e,
-    categoryId: CAT_MAP[e.categoryId] ?? e.categoryId,
-    recurrence: (REC_MAP[e.recurrence as string] ?? e.recurrence) as Event["recurrence"],
-  }));
+  return events.map((e) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const legacy = e as any;
+    const completedDates: string[] =
+      e.completedDates ?? (legacy.completed === true ? [e.date] : []);
+    return {
+      ...e,
+      categoryId: CAT_MAP[e.categoryId] ?? e.categoryId,
+      recurrence: (REC_MAP[e.recurrence as string] ?? e.recurrence) as Event["recurrence"],
+      completedDates,
+    };
+  });
 }
 function migrateHabits(habits: Habit[]): Habit[] {
   return habits.map((h) => ({
@@ -96,6 +103,7 @@ interface AppStore {
   addEvent: (event: Omit<Event, "id">) => void;
   updateEvent: (id: string, event: Partial<Event>) => void;
   deleteEvent: (id: string) => void;
+  toggleEventComplete: (id: string, date: string) => void;
   addTask: (task: Omit<Task, "id" | "createdAt">) => void;
   updateTask: (id: string, task: Partial<Task>) => void;
   deleteTask: (id: string) => void;
@@ -144,6 +152,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const deleteEvent = useCallback((id: string) => {
     setEvents((prev) => prev.filter((e) => e.id !== id));
+  }, []);
+
+  const toggleEventComplete = useCallback((id: string, date: string) => {
+    setEvents((prev) => prev.map((e) => {
+      if (e.id !== id) return e;
+      const dates = e.completedDates ?? [];
+      const completedDates = dates.includes(date)
+        ? dates.filter((d) => d !== date)
+        : [...dates, date];
+      return { ...e, completedDates };
+    }));
   }, []);
 
   const addTask = useCallback((task: Omit<Task, "id" | "createdAt">) => {
@@ -205,7 +224,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       events, tasks, habits, settings, customCategories, userProfile,
       selectedDate, calendarView,
       setSelectedDate, setCalendarView,
-      addEvent, updateEvent, deleteEvent,
+      addEvent, updateEvent, deleteEvent, toggleEventComplete,
       addTask, updateTask, deleteTask,
       addHabit, updateHabit, deleteHabit, toggleHabitComplete,
       updateSettings, addCustomCategory, deleteCustomCategory, updateUserProfile,

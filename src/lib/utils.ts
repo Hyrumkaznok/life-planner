@@ -7,6 +7,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function isEventCompleted(event: Event, dateStr: string): boolean {
+  return (event.completedDates ?? []).includes(dateStr);
+}
+
 export function eventAppliesToDate(event: Event, dateStr: string): boolean {
   if (event.recurrence === "nenhuma") return event.date === dateStr;
   if (event.date > dateStr) return false;

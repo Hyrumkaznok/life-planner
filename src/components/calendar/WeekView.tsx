@@ -5,7 +5,7 @@ import { useAppStore } from "@/lib/store";
 import { useCategoryMap } from "@/lib/useCategories";
 import { Event } from "@/lib/types";
 import { startOfWeek, endOfWeek, eachDayOfInterval, format, parseISO, addWeeks, subWeeks, isToday } from "date-fns";
-import { eventAppliesToDate } from "@/lib/utils";
+import { eventAppliesToDate, isEventCompleted } from "@/lib/utils";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Calendar, CheckSquare, Target, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
@@ -165,7 +165,7 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
                 const cat = CATEGORY_MAP[event.categoryId];
                 if (!cat) return null;
                 const isDragging = drag?.eventId === event.id;
-                const isCompleted = !!event.completed;
+                const isCompleted = isEventCompleted(event, dateStr);
                 return (
                   <div key={event.id} draggable onDragStart={(e) => handleDragStart(e, event)} onDragEnd={handleDragEnd}
                     className="absolute left-1 right-1 rounded-xl px-2 py-1.5 overflow-hidden select-none cursor-grab active:cursor-grabbing"

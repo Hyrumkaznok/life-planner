@@ -12,7 +12,7 @@ import { TimePicker } from "@/components/ui/time-picker";
 import { useCategories } from "@/lib/useCategories";
 import { Event, RecurrenceType } from "@/lib/types";
 import { useAppStore } from "@/lib/store";
-import { cn } from "@/lib/utils";
+import { cn, isEventCompleted } from "@/lib/utils";
 import { toast } from "sonner";
 import { CheckCircle2 } from "lucide-react";
 
@@ -58,8 +58,9 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
   const [location, setLocation]     = useState(editEvent?.location ?? "");
   const [recurrence, setRecurrence] = useState<RecurrenceType>(editEvent?.recurrence ?? "nenhuma");
   const [recurrenceDays, setRecurrenceDays] = useState<number[]>(editEvent?.recurrenceDays ?? [1, 2, 3, 4, 5]);
-  const [confirmed, setConfirmed]     = useState(editEvent?.confirmed ?? true);
-  const [completed, setCompleted]     = useState(editEvent?.completed ?? false);
+  const [confirmed, setConfirmed] = useState(editEvent?.confirmed ?? true);
+  const eventDate = editEvent?.date ?? initialDate ?? "";
+  const [completed, setCompleted] = useState(editEvent ? isEventCompleted(editEvent, eventDate) : false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   // When start changes, push end forward if needed
@@ -101,7 +102,11 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
       recurrence,
       recurrenceDays: recurrence === "personalizada" ? recurrenceDays : undefined,
       confirmed,
-      completed,
+      completedDates: editEvent
+        ? completed
+          ? [...new Set([...(editEvent.completedDates ?? []), date])]
+          : (editEvent.completedDates ?? []).filter((d) => d !== date)
+        : completed ? [date] : [],
     };
     if (editEvent) {
       updateEvent(editEvent.id, data);

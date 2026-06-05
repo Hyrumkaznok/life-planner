@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useAppStore } from "@/lib/store";
 import { useCategoryMap } from "@/lib/useCategories";
 import { EventForm } from "@/components/events/EventForm";
+import { useCountUp } from "@/lib/useCountUp";
+import { isEventCompleted } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Calendar, CheckSquare, Target, Flame,
@@ -26,7 +28,7 @@ const statusIcon = {
 };
 
 export default function DashboardPage() {
-  const { events, tasks, habits, updateEvent } = useAppStore();
+  const { events, tasks, habits, toggleEventComplete } = useAppStore();
   const CATEGORY_MAP = useCategoryMap();
   const [showEventForm, setShowEventForm] = useState(false);
 
@@ -47,12 +49,21 @@ export default function DashboardPage() {
   const bestStreak      = habits.reduce((max, h) => Math.max(max, h.streak), 0);
   const highPriTasks    = pendingTasks.filter((t) => t.priority === "high");
 
+  // Count-up animado para cada stat (delay escalonado)
+  const c0 = useCountUp(todayEvents.length,       650,   0);
+  const c1 = useCountUp(pendingTasks.length,       650,  80);
+  const c2 = useCountUp(completedCount,            650, 160);
+  const c3 = useCountUp(tasks.length,              650, 160);
+  const c4 = useCountUp(completedHabits.length,    650, 240);
+  const c5 = useCountUp(todayHabits.length,        650, 240);
+  const c6 = useCountUp(bestStreak,                650, 320);
+
   const stats = [
-    { icon: Calendar,     color: "text-zinc-600",   label: "Eventos hoje",    value: todayEvents.length,                                 href: "/calendario" },
-    { icon: CheckSquare,  color: "text-blue-500",   label: "Pendentes",       value: pendingTasks.length,                                href: "/tarefas"    },
-    { icon: CheckCircle2, color: "text-emerald-500",label: "Concluídas",      value: `${completedCount}/${tasks.length}`,                href: "/tarefas"    },
-    { icon: Target,       color: "text-zinc-500",   label: "Hábitos hoje",    value: `${completedHabits.length}/${todayHabits.length}`,  href: "/habitos"    },
-    { icon: Flame,        color: "text-orange-400", label: "Maior sequência", value: `${bestStreak}d`,                                  href: "/habitos"    },
+    { icon: Calendar,     color: "text-zinc-600",    label: "Eventos hoje",    value: `${c0}`,       href: "/calendario" },
+    { icon: CheckSquare,  color: "text-blue-500",    label: "Pendentes",       value: `${c1}`,       href: "/tarefas"    },
+    { icon: CheckCircle2, color: "text-emerald-500", label: "Concluídas",      value: `${c2}/${c3}`, href: "/tarefas"    },
+    { icon: Target,       color: "text-zinc-500",    label: "Hábitos hoje",    value: `${c4}/${c5}`, href: "/habitos"    },
+    { icon: Flame,        color: "text-orange-400",  label: "Maior sequência", value: `${c6}d`,      href: "/habitos"    },
   ];
 
   return (
@@ -70,20 +81,25 @@ export default function DashboardPage() {
         </div>
         <Button
           onClick={() => setShowEventForm(true)}
-          className="bg-zinc-900 hover:bg-zinc-800 text-white border-0 rounded-lg h-8 px-3 text-[12px] font-medium shadow-none transition-colors duration-150"
+          className="btn-shine bg-zinc-900 hover:bg-zinc-800 text-white border-0 rounded-lg h-8 px-3 text-[12px] font-medium shadow-none transition-colors duration-150"
         >
           <Plus size={13} className="mr-1.5" strokeWidth={2} />
           Novo evento
         </Button>
       </div>
 
-      {/* ── Stats strip — scroll horizontal em mobile ─────────────────── */}
+      {/* ── Stats strip ───────────────────────────────────────────────── */}
       <div className="flex overflow-x-auto scrollbar-none bg-[var(--card)] dark:bg-[var(--secondary)] border-b border-[var(--border)]">
         {stats.map(({ icon: Icon, color, label, value, href }, i) => (
-          <Link key={href} href={href} className="flex-none min-w-[90px] group">
+          <Link
+            key={href}
+            href={href}
+            className="flex-none min-w-[90px] group stat-card"
+            style={{ animationDelay: `${i * 60}ms` }}
+          >
             <div className={`flex flex-col px-4 sm:px-6 py-3 sm:py-4 ${i !== 0 ? "border-l border-[var(--border)]" : ""} hover:bg-[var(--secondary)] dark:hover:bg-[var(--card)] transition-colors duration-150`}>
               <Icon size={14} className={`${color} mb-2`} strokeWidth={1.5} />
-              <span className="text-[17px] sm:text-[19px] font-semibold text-[var(--foreground)] leading-none">{value}</span>
+              <span className="text-[17px] sm:text-[19px] font-semibold text-[var(--foreground)] leading-none tabular-nums">{value}</span>
               <span className="text-[10px] sm:text-[11px] text-[var(--muted-foreground)] mt-1 font-normal">{label}</span>
             </div>
           </Link>
@@ -94,16 +110,16 @@ export default function DashboardPage() {
       <div className="px-4 py-4 sm:px-8 sm:py-6 space-y-4 sm:space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
 
-          {/* Today */}
-          <div className="lg:col-span-3 bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
+          {/* Agenda de hoje */}
+          <div className="lg:col-span-3 bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card animate-enter" style={{ animationDelay: "80ms" }}>
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
               <span className="text-[12px] font-semibold text-[var(--foreground)]">Agenda de hoje</span>
-              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 transition-colors font-medium">
+              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 dark:hover:text-white transition-colors font-medium">
                 Ver calendário <ArrowRight size={11} strokeWidth={2} />
               </Link>
             </div>
             {todayEvents.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="flex flex-col items-center justify-center py-12 text-center animate-enter" style={{ animationDelay: "200ms" }}>
                 <p className="text-[13px] font-medium text-[var(--foreground)]">Nenhum evento hoje</p>
                 <p className="text-[12px] text-[var(--muted-foreground)] mt-0.5">Clique em um horário no calendário</p>
               </div>
@@ -112,12 +128,15 @@ export default function DashboardPage() {
                 {todayEvents.map((event, i) => {
                   const cat = CATEGORY_MAP[event.categoryId];
                   if (!cat) return null;
-                  const isCompleted = !!event.completed;
+                  const isCompleted = isEventCompleted(event, today);
                   return (
-                    <div key={event.id}
-                      className={`flex items-center gap-3.5 px-5 py-3 hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/40 transition-colors duration-100 ${i !== todayEvents.length - 1 ? "border-b border-[var(--border)]" : ""} ${isCompleted ? "opacity-60" : ""}`}>
+                    <div
+                      key={event.id}
+                      className={`flex items-center gap-3.5 px-5 py-3 hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/40 transition-colors duration-100 animate-enter ${i !== todayEvents.length - 1 ? "border-b border-[var(--border)]" : ""} ${isCompleted ? "opacity-60" : ""}`}
+                      style={{ animationDelay: `${160 + i * 55}ms` }}
+                    >
                       <button
-                        onClick={() => updateEvent(event.id, { completed: !isCompleted })}
+                        onClick={() => toggleEventComplete(event.id, today)}
                         className="shrink-0 transition-transform hover:scale-110"
                         aria-label={isCompleted ? "Marcar como pendente" : "Marcar como concluído"}
                       >
@@ -148,11 +167,11 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* Upcoming */}
-          <div className="lg:col-span-2 bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
+          {/* Próximos eventos */}
+          <div className="lg:col-span-2 bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card animate-enter" style={{ animationDelay: "140ms" }}>
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
               <span className="text-[12px] font-semibold text-[var(--foreground)]">Próximos eventos</span>
-              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 transition-colors font-medium">
+              <Link href="/calendario" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 dark:hover:text-white transition-colors font-medium">
                 Ver todos <ArrowRight size={11} strokeWidth={2} />
               </Link>
             </div>
@@ -164,8 +183,11 @@ export default function DashboardPage() {
               const eventDate = parseISO(event.date);
               const isEventToday = isToday(eventDate);
               return (
-                <div key={event.id}
-                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/40 transition-colors duration-100 ${i !== upcomingEvents.length - 1 ? "border-b border-[var(--border)]" : ""}`}>
+                <div
+                  key={event.id}
+                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/40 transition-colors duration-100 animate-enter ${i !== upcomingEvents.length - 1 ? "border-b border-[var(--border)]" : ""}`}
+                  style={{ animationDelay: `${200 + i * 50}ms` }}
+                >
                   <div className="w-8 h-8 rounded-xl bg-[var(--secondary)] dark:bg-[#3F3F46] flex flex-col items-center justify-center shrink-0">
                     <p className="text-[8px] text-[var(--muted-foreground)] uppercase leading-none">{format(eventDate, "MMM", { locale: ptBR })}</p>
                     <p className={`text-[12px] font-bold leading-none mt-0.5 ${isEventToday ? "text-zinc-900 dark:text-white font-bold" : "text-[var(--foreground)]"}`}>{format(eventDate, "d")}</p>
@@ -181,23 +203,26 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Priority tasks */}
+        {/* Tarefas urgentes */}
         {highPriTasks.length > 0 && (
-          <div className="bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card">
+          <div className="bg-[var(--card)] dark:bg-[var(--card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-card animate-enter" style={{ animationDelay: "200ms" }}>
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-[var(--border)]">
               <div className="flex items-center gap-2">
                 <span className="text-[12px] font-semibold text-[var(--foreground)]">Tarefas urgentes</span>
                 <span className="text-[10px] font-semibold text-red-500 bg-red-50 dark:bg-red-950/40 px-1.5 py-px rounded-md">{highPriTasks.length}</span>
               </div>
-              <Link href="/tarefas" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 transition-colors font-medium">
+              <Link href="/tarefas" className="flex items-center gap-1 text-[11px] text-zinc-600 hover:text-zinc-900 dark:hover:text-white transition-colors font-medium">
                 Ver todas <ArrowRight size={11} strokeWidth={2} />
               </Link>
             </div>
             {highPriTasks.slice(0, 5).map((task, i) => {
               const cat = CATEGORY_MAP[task.categoryId];
               return (
-                <div key={task.id}
-                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/40 transition-colors duration-100 ${i !== Math.min(highPriTasks.length, 5) - 1 ? "border-b border-[var(--border)]" : ""}`}>
+                <div
+                  key={task.id}
+                  className={`flex items-center gap-3 px-5 py-2.5 hover:bg-[var(--secondary)] dark:hover:bg-[var(--accent)]/40 transition-colors duration-100 animate-enter ${i !== Math.min(highPriTasks.length, 5) - 1 ? "border-b border-[var(--border)]" : ""}`}
+                  style={{ animationDelay: `${260 + i * 50}ms` }}
+                >
                   {statusIcon[task.status]}
                   <div className="flex-1 min-w-0">
                     <p className="text-[13px] font-medium text-[var(--foreground)] truncate">{task.title}</p>

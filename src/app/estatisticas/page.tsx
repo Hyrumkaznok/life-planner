@@ -62,7 +62,9 @@ export default function EstatisticasPage() {
 
   // ── Estatísticas de tempo semanal ─────────────────────────────────────────
   const weekEvents     = events.filter((e) => e.date >= thisWeekStart && e.date <= thisWeekEnd);
-  const weekCompleted  = weekEvents.filter((e) => !!e.completed);
+  const weekCompleted  = weekEvents.filter((e) =>
+    (e.completedDates ?? []).some((d) => d >= thisWeekStart && d <= thisWeekEnd)
+  );
 
   const totalPlannedMins   = weekEvents.reduce((s, e) => s + calcDurationMins(e.startTime, e.endTime), 0);
   const totalCompletedMins = weekCompleted.reduce((s, e) => s + calcDurationMins(e.startTime, e.endTime), 0);
@@ -70,7 +72,9 @@ export default function EstatisticasPage() {
 
   const hoursByCategory = CATEGORIES.map((cat) => {
     const planned   = weekEvents.filter((e) => e.categoryId === cat.id);
-    const completed = planned.filter((e) => !!e.completed);
+    const completed = planned.filter((e) =>
+      (e.completedDates ?? []).some((d) => d >= thisWeekStart && d <= thisWeekEnd)
+    );
     const plannedMins   = planned.reduce((s, e) => s + calcDurationMins(e.startTime, e.endTime), 0);
     const completedMins = completed.reduce((s, e) => s + calcDurationMins(e.startTime, e.endTime), 0);
     return { ...cat, plannedMins, completedMins, count: completed.length };
