@@ -46,6 +46,40 @@ function save(key: string, value: unknown) {
   }
 }
 
+// ── Migração de dados antigos (en → pt) ───────────────────────────────────────
+
+const CAT_MAP: Record<string, string> = {
+  work: "trabalho", study: "estudos", gym: "academia", health: "saude",
+  personal: "pessoal", finance: "financas", family: "familia", food: "alimentacao",
+  travel: "viagem", leisure: "lazer", task: "tarefa", other: "outros",
+};
+const REC_MAP: Record<string, string> = {
+  none: "nenhuma", daily: "diaria", weekly: "semanal", monthly: "mensal", custom: "personalizada",
+};
+const FREQ_MAP: Record<string, string> = { daily: "diaria", weekly: "semanal" };
+const VIEW_MAP: Record<string, string> = { day: "dia", week: "semana", month: "mes" };
+
+function migrateEvents(events: Event[]): Event[] {
+  return events.map((e) => ({
+    ...e,
+    categoryId: CAT_MAP[e.categoryId] ?? e.categoryId,
+    recurrence: (REC_MAP[e.recurrence as string] ?? e.recurrence) as Event["recurrence"],
+  }));
+}
+function migrateHabits(habits: Habit[]): Habit[] {
+  return habits.map((h) => ({
+    ...h,
+    categoryId: CAT_MAP[h.categoryId] ?? h.categoryId,
+    frequency: (FREQ_MAP[h.frequency as string] ?? h.frequency) as Habit["frequency"],
+  }));
+}
+function migrateTasks(tasks: Task[]): Task[] {
+  return tasks.map((t) => ({ ...t, categoryId: CAT_MAP[t.categoryId] ?? t.categoryId }));
+}
+function migrateSettings(s: AppSettings): AppSettings {
+  return { ...s, defaultView: (VIEW_MAP[s.defaultView as string] ?? s.defaultView) as AppSettings["defaultView"] };
+}
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface AppStore {
@@ -83,14 +117,14 @@ const DEFAULT_PROFILE: UserProfile = { name: "", role: "", email: "", initials: 
 const AppContext = createContext<AppStore | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [events, setEvents]                   = useState<Event[]>(() => load("lp_events", MOCK_EVENTS));
-  const [tasks, setTasks]                     = useState<Task[]>(() => load("lp_tasks", MOCK_TASKS));
-  const [habits, setHabits]                   = useState<Habit[]>(() => load("lp_habits", MOCK_HABITS));
+  const [events, setEvents]                   = useState<Event[]>(() => migrateEvents(load("lp_events", MOCK_EVENTS)));
+  const [tasks, setTasks]                     = useState<Task[]>(() => migrateTasks(load("lp_tasks", MOCK_TASKS)));
+  const [habits, setHabits]                   = useState<Habit[]>(() => migrateHabits(load("lp_habits", MOCK_HABITS)));
   const [customCategories, setCustomCategories] = useState<Category[]>(() => load("lp_categories", []));
   const [userProfile, setUserProfile]         = useState<UserProfile>(() => load("lp_profile", DEFAULT_PROFILE));
-  const [settings, setSettings]               = useState<AppSettings>(() => load("lp_settings", DEFAULT_SETTINGS));
+  const [settings, setSettings]               = useState<AppSettings>(() => migrateSettings(load("lp_settings", DEFAULT_SETTINGS)));
   const [selectedDate, setSelectedDate]       = useState(format(new Date(), "yyyy-MM-dd"));
-  const [calendarView, setCalendarView]       = useState<"dia" | "semana" | "mes">(() => load<AppSettings>("lp_settings", DEFAULT_SETTINGS).defaultView);
+  const [calendarView, setCalendarView]       = useState<"dia" | "semana" | "mes">(() => migrateSettings(load<AppSettings>("lp_settings", DEFAULT_SETTINGS)).defaultView);
 
   // Persist to localStorage whenever state changes
   useEffect(() => { save("lp_events", events); }, [events]);
