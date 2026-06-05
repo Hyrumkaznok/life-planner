@@ -1,7 +1,7 @@
 export type CategoryId =
-  | "work" | "study" | "gym" | "health" | "personal"
-  | "finance" | "family" | "food" | "travel" | "leisure"
-  | "task" | "other";
+  | "trabalho" | "estudos" | "academia" | "saude" | "pessoal"
+  | "financas" | "familia" | "alimentacao" | "viagem" | "lazer"
+  | "tarefa" | "outros";
 
 export interface Category {
   id: string;
@@ -20,7 +20,7 @@ export interface UserProfile {
   avatarColor: string;
 }
 
-export type RecurrenceType = "none" | "daily" | "weekly" | "monthly";
+export type RecurrenceType = "nenhuma" | "diaria" | "semanal" | "mensal" | "personalizada";
 
 export interface Event {
   id: string;
@@ -32,6 +32,7 @@ export interface Event {
   description?: string;
   location?: string;
   recurrence: RecurrenceType;
+  recurrenceDays?: number[]; // 0=Dom, 1=Seg, ..., 6=Sáb — used when recurrence === "custom"
   confirmed: boolean;
   completed?: boolean;
 }
@@ -50,7 +51,7 @@ export interface Task {
   createdAt: string;
 }
 
-export type HabitFrequency = "daily" | "weekly";
+export type HabitFrequency = "diaria" | "semanal";
 
 export interface Habit {
   id: string;
@@ -68,5 +69,5 @@ export type ThemeMode = "light" | "dark";
 export interface AppSettings {
   theme: ThemeMode;
   weekStartsOnMonday: boolean;
-  defaultView: "day" | "week" | "month";
+  defaultView: "dia" | "semana" | "mes";
 }

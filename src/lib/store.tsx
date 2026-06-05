@@ -56,9 +56,9 @@ interface AppStore {
   customCategories: Category[];
   userProfile: UserProfile;
   selectedDate: string;
-  calendarView: "day" | "week" | "month";
+  calendarView: "dia" | "semana" | "mes";
   setSelectedDate: (date: string) => void;
-  setCalendarView: (view: "day" | "week" | "month") => void;
+  setCalendarView: (view: "dia" | "semana" | "mes") => void;
   addEvent: (event: Omit<Event, "id">) => void;
   updateEvent: (id: string, event: Partial<Event>) => void;
   deleteEvent: (id: string) => void;
@@ -75,7 +75,7 @@ interface AppStore {
   updateUserProfile: (profile: Partial<UserProfile>) => void;
 }
 
-const DEFAULT_SETTINGS: AppSettings = { theme: "light", weekStartsOnMonday: true, defaultView: "week" };
+const DEFAULT_SETTINGS: AppSettings = { theme: "light", weekStartsOnMonday: true, defaultView: "semana" };
 const DEFAULT_PROFILE: UserProfile = { name: "", role: "", email: "", initials: "U", avatarColor: "#E11D48" };
 
 // ── Context ───────────────────────────────────────────────────────────────────
@@ -90,7 +90,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [userProfile, setUserProfile]         = useState<UserProfile>(() => load("lp_profile", DEFAULT_PROFILE));
   const [settings, setSettings]               = useState<AppSettings>(() => load("lp_settings", DEFAULT_SETTINGS));
   const [selectedDate, setSelectedDate]       = useState(format(new Date(), "yyyy-MM-dd"));
-  const [calendarView, setCalendarView]       = useState<"day" | "week" | "month">("week");
+  const [calendarView, setCalendarView]       = useState<"dia" | "semana" | "mes">(() => load<AppSettings>("lp_settings", DEFAULT_SETTINGS).defaultView);
 
   // Persist to localStorage whenever state changes
   useEffect(() => { save("lp_events", events); }, [events]);

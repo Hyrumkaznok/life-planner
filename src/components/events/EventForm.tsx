@@ -12,8 +12,11 @@ import { TimePicker } from "@/components/ui/time-picker";
 import { useCategories } from "@/lib/useCategories";
 import { Event, RecurrenceType } from "@/lib/types";
 import { useAppStore } from "@/lib/store";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { CheckCircle2 } from "lucide-react";
+
+const WEEK_DAY_LABELS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 interface EventFormProps {
   open: boolean;
@@ -32,10 +35,11 @@ function addOneHour(time: string): string {
 }
 
 const RECURRENCE_OPTIONS: { value: RecurrenceType; label: string }[] = [
-  { value: "none", label: "Não se repete" },
-  { value: "daily", label: "Diariamente" },
-  { value: "weekly", label: "Semanalmente" },
-  { value: "monthly", label: "Mensalmente" },
+  { value: "nenhuma",      label: "Não se repete"   },
+  { value: "diaria",       label: "Diariamente"     },
+  { value: "semanal",      label: "Semanalmente"    },
+  { value: "mensal",       label: "Mensalmente"     },
+  { value: "personalizada",label: "Dias específicos"},
 ];
 
 export function EventForm({ open, onClose, initialDate, initialTime, editEvent }: EventFormProps) {
@@ -46,13 +50,14 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
   const defaultEnd   = editEvent?.endTime   ?? (initialTime ? addOneHour(initialTime) : "10:00");
 
   const [title, setTitle]           = useState(editEvent?.title ?? "");
-  const [categoryId, setCategoryId] = useState(editEvent?.categoryId ?? "work");
+  const [categoryId, setCategoryId] = useState(editEvent?.categoryId ?? "trabalho");
   const [date, setDate]             = useState(editEvent?.date ?? initialDate ?? "");
   const [startTime, setStartTime]   = useState(defaultStart);
   const [endTime, setEndTime]       = useState(defaultEnd);
   const [description, setDescription] = useState(editEvent?.description ?? "");
   const [location, setLocation]     = useState(editEvent?.location ?? "");
-  const [recurrence, setRecurrence] = useState<RecurrenceType>(editEvent?.recurrence ?? "none");
+  const [recurrence, setRecurrence] = useState<RecurrenceType>(editEvent?.recurrence ?? "nenhuma");
+  const [recurrenceDays, setRecurrenceDays] = useState<number[]>(editEvent?.recurrenceDays ?? [1, 2, 3, 4, 5]);
   const [confirmed, setConfirmed]     = useState(editEvent?.confirmed ?? true);
   const [completed, setCompleted]     = useState(editEvent?.completed ?? false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
@@ -81,6 +86,10 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
       toast.error("O horário de fim deve ser após o horário de início.");
       return;
     }
+    if (recurrence === "personalizada" && recurrenceDays.length === 0) {
+      toast.error("Selecione ao menos um dia para a recorrência personalizada.");
+      return;
+    }
     const data = {
       title: title.trim(),
       categoryId: categoryId as Event["categoryId"],
@@ -90,6 +99,7 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
       description: description.trim() || undefined,
       location: location.trim() || undefined,
       recurrence,
+      recurrenceDays: recurrence === "personalizada" ? recurrenceDays : undefined,
       confirmed,
       completed,
     };
@@ -227,6 +237,34 @@ export function EventForm({ open, onClose, initialDate, initialTime, editEvent }
               </SelectContent>
             </Select>
           </div>
+
+          {/* Dias específicos da semana */}
+          {recurrence === "personalizada" && (
+            <div>
+              <Label className="text-xs font-semibold text-slate-500">Dias da semana</Label>
+              <div className="mt-1.5 flex gap-1">
+                {WEEK_DAY_LABELS.map((label, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() =>
+                      setRecurrenceDays((prev) =>
+                        prev.includes(i) ? prev.filter((d) => d !== i) : [...prev, i]
+                      )
+                    }
+                    className={cn(
+                      "flex-1 h-9 rounded-xl text-xs font-semibold border transition-all",
+                      recurrenceDays.includes(i)
+                        ? "bg-zinc-800 text-white border-zinc-800 shadow-sm"
+                        : "bg-slate-50 text-slate-500 border-slate-200 hover:border-zinc-400"
+                    )}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Localização */}
           <div>

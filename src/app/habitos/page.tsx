@@ -23,8 +23,8 @@ function HabitFormDialog({ open, onClose, editHabit }: { open: boolean; onClose:
   const { addHabit, updateHabit } = useAppStore();
   const allCategories = useCategories();
   const [name, setName] = useState(editHabit?.name ?? "");
-  const [categoryId, setCategoryId] = useState(editHabit?.categoryId ?? "health");
-  const [frequency, setFrequency] = useState<HabitFrequency>(editHabit?.frequency ?? "daily");
+  const [categoryId, setCategoryId] = useState(editHabit?.categoryId ?? "saude");
+  const [frequency, setFrequency] = useState<HabitFrequency>(editHabit?.frequency ?? "diaria");
   const [targetDays, setTargetDays] = useState<number[]>(editHabit?.targetDays ?? [0, 1, 2, 3, 4, 5, 6]);
 
   const toggleDay = (d: number) =>
@@ -73,8 +73,8 @@ function HabitFormDialog({ open, onClose, editHabit }: { open: boolean; onClose:
               <Select value={frequency} onValueChange={(v) => v && setFrequency(v as HabitFrequency)}>
                 <SelectTrigger className="mt-1"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="daily">Diária</SelectItem>
-                  <SelectItem value="weekly">Semanal</SelectItem>
+                  <SelectItem value="diaria">Diária</SelectItem>
+                  <SelectItem value="semanal">Semanal</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -215,7 +215,7 @@ export default function HabitosPage() {
                           {cat.name}
                         </span>
                         <span className="text-[10px] text-slate-400">
-                          {habit.frequency === "daily" ? "Diário" : "Semanal"}
+                          {habit.frequency === "diaria" ? "Diário" : "Semanal"}
                         </span>
                         {habit.streak > 0 && (
                           <div className="flex items-center gap-1 bg-orange-50 px-2 py-0.5 rounded-full">

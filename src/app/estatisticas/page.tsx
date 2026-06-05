@@ -176,7 +176,7 @@ export default function EstatisticasPage() {
             { icon: Calendar, label: "Total de Eventos", value: events.length, sub: `${todayEvents} hoje · ${thisWeekEvents} esta semana`, gradient: "from-green-700 to-green-900" },
             { icon: CheckSquare, label: "Tarefas Concluídas", value: completedTasks, sub: `de ${totalTasks} no total`, gradient: "from-teal-500 to-teal-700" },
             { icon: Target, label: "Conclusões (7 dias)", value: last7DaysCompletions, sub: `${habits.length} hábitos ativos`, gradient: "from-zinc-600 to-zinc-800" },
-            { icon: Flame, label: "Melhor Sequência", value: `${bestStreak}d`, sub: "streak ativo", gradient: "from-slate-500 to-slate-700" },
+            { icon: Flame, label: "Melhor Sequência", value: `${bestStreak}d`, sub: "sequência ativa", gradient: "from-slate-500 to-slate-700" },
           ].map(({ icon: Icon, label, value, sub, gradient }) => (
             <div key={label} className={`bg-gradient-to-br ${gradient} rounded-2xl p-5 text-white shadow-elevated`}>
               <Icon className="w-5 h-5 mb-3 opacity-80" />

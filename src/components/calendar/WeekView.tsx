@@ -5,6 +5,7 @@ import { useAppStore } from "@/lib/store";
 import { useCategoryMap } from "@/lib/useCategories";
 import { Event } from "@/lib/types";
 import { startOfWeek, endOfWeek, eachDayOfInterval, format, parseISO, addWeeks, subWeeks, isToday } from "date-fns";
+import { eventAppliesToDate } from "@/lib/utils";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Calendar, CheckSquare, Target, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
@@ -73,7 +74,10 @@ export function WeekView({ onEventClick, onCreateEvent, onCreateTask, onCreateHa
   }, []);
 
   const days        = eachDayOfInterval({ start: weekStart, end: endOfWeek(weekStart, { weekStartsOn: 1 }) });
-  const eventsForDay = (day: Date) => events.filter((e) => e.date === format(day, "yyyy-MM-dd")).sort((a, b) => a.startTime.localeCompare(b.startTime));
+  const eventsForDay = (day: Date) => {
+    const dateStr = format(day, "yyyy-MM-dd");
+    return events.filter((e) => eventAppliesToDate(e, dateStr)).sort((a, b) => a.startTime.localeCompare(b.startTime));
+  };
   const getTop      = (e: Event) => (timeToMins(e.startTime) / 60) * HOUR_HEIGHT;
   const getHeight   = (e: Event) => Math.max(((timeToMins(e.endTime) - timeToMins(e.startTime)) / 60) * HOUR_HEIGHT, 28);
 

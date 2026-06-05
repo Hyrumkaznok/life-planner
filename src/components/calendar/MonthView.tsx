@@ -7,6 +7,7 @@ import {
   startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval,
   format, isSameMonth, isToday, parseISO, addMonths, subMonths,
 } from "date-fns";
+import { eventAppliesToDate } from "@/lib/utils";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
@@ -28,7 +29,10 @@ export function MonthView({ onEventClick }: MonthViewProps) {
   const gridEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
   const days = eachDayOfInterval({ start: gridStart, end: gridEnd });
 
-  const eventsForDay = (day: Date) => events.filter((e) => e.date === format(day, "yyyy-MM-dd"));
+  const eventsForDay = (day: Date) => {
+    const dateStr = format(day, "yyyy-MM-dd");
+    return events.filter((e) => eventAppliesToDate(e, dateStr));
+  };
 
   return (
     <div className="flex flex-col h-full bg-white">

@@ -11,7 +11,7 @@ import { useAppStore } from "@/lib/store";
 import { useAuth } from "@/lib/auth";
 
 const navItems = [
-  { href: "/",             icon: LayoutDashboard, label: "Dashboard"    },
+  { href: "/",             icon: LayoutDashboard, label: "Início"       },
   { href: "/calendario",   icon: Calendar,        label: "Calendário"   },
   { href: "/tarefas",      icon: CheckSquare,     label: "Tarefas"      },
   { href: "/habitos",      icon: Target,          label: "Hábitos"      },

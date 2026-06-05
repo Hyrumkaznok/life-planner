@@ -24,7 +24,7 @@ function QuickTaskDialog({ open, onClose }: { open: boolean; onClose: () => void
   const allCategories = useCategories();
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState<TaskPriority>("medium");
-  const [categoryId, setCategoryId] = useState("work");
+  const [categoryId, setCategoryId] = useState("trabalho");
 
   const handleSave = () => {
     if (!title.trim()) { toast.error("Informe o título."); return; }
@@ -89,7 +89,7 @@ function QuickHabitDialog({ open, onClose }: { open: boolean; onClose: () => voi
   const { addHabit } = useAppStore();
   const allCategories = useCategories();
   const [name, setName] = useState("");
-  const [categoryId, setCategoryId] = useState("health");
+  const [categoryId, setCategoryId] = useState("saude");
   const [targetDays, setTargetDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]);
 
   const toggleDay = (d: number) =>
@@ -98,7 +98,7 @@ function QuickHabitDialog({ open, onClose }: { open: boolean; onClose: () => voi
   const handleSave = () => {
     if (!name.trim()) { toast.error("Informe o nome."); return; }
     if (targetDays.length === 0) { toast.error("Selecione ao menos um dia."); return; }
-    addHabit({ name: name.trim(), categoryId: categoryId as Habit["categoryId"], frequency: "daily", targetDays });
+    addHabit({ name: name.trim(), categoryId: categoryId as Habit["categoryId"], frequency: "diaria", targetDays });
     toast.success("Hábito criado!");
     setName(""); onClose();
   };
@@ -196,9 +196,9 @@ export default function CalendarioPage() {
       <PageHeader title="Calendário" subtitle="Clique em um horário para adicionar evento, tarefa ou hábito">
         <Tabs value={calendarView} onValueChange={(v) => setCalendarView(v as typeof calendarView)}>
           <TabsList className="h-8">
-            <TabsTrigger value="day" className="text-xs px-3">Dia</TabsTrigger>
-            <TabsTrigger value="week" className="text-xs px-3">Semana</TabsTrigger>
-            <TabsTrigger value="month" className="text-xs px-3">Mês</TabsTrigger>
+            <TabsTrigger value="dia" className="text-xs px-3">Dia</TabsTrigger>
+            <TabsTrigger value="semana" className="text-xs px-3">Semana</TabsTrigger>
+            <TabsTrigger value="mes" className="text-xs px-3">Mês</TabsTrigger>
           </TabsList>
         </Tabs>
         <Button
@@ -212,9 +212,9 @@ export default function CalendarioPage() {
       </PageHeader>
 
       <div className="flex-1 overflow-hidden">
-        {calendarView === "day" && <DayView {...sharedProps} />}
-        {calendarView === "week" && <WeekView {...sharedProps} />}
-        {calendarView === "month" && <MonthView onEventClick={handleEventClick} />}
+        {calendarView === "dia" && <DayView {...sharedProps} />}
+        {calendarView === "semana" && <WeekView {...sharedProps} />}
+        {calendarView === "mes" && <MonthView onEventClick={handleEventClick} />}
       </div>
 
       <EventForm

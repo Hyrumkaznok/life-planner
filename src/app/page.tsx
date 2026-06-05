@@ -65,7 +65,7 @@ export default function DashboardPage() {
             {dateCapital}
           </p>
           <h1 className="text-[22px] font-semibold text-[var(--foreground)] tracking-tight leading-none">
-            Dashboard
+            Início
           </h1>
         </div>
         <Button

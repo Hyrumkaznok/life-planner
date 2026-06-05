@@ -35,7 +35,7 @@ function TaskFormDialog({ open, onClose, editTask }: { open: boolean; onClose: (
   const [description, setDescription] = useState(editTask?.description ?? "");
   const [priority, setPriority] = useState<TaskPriority>(editTask?.priority ?? "medium");
   const [status, setStatus] = useState<TaskStatus>(editTask?.status ?? "pending");
-  const [categoryId, setCategoryId] = useState(editTask?.categoryId ?? "work");
+  const [categoryId, setCategoryId] = useState(editTask?.categoryId ?? "trabalho");
   const [dueDate, setDueDate] = useState(editTask?.dueDate ?? "");
 
   const handleSave = () => {

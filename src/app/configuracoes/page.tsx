@@ -180,9 +180,9 @@ export default function ConfiguracoesPage() {
               <Select value={settings.defaultView} onValueChange={(v) => v && updateSettings({ defaultView: v as typeof settings.defaultView })}>
                 <SelectTrigger className="w-28 h-8 text-xs border-slate-200 dark:border-[var(--border)]"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="day">Dia</SelectItem>
-                  <SelectItem value="week">Semana</SelectItem>
-                  <SelectItem value="month">Mês</SelectItem>
+                  <SelectItem value="dia">Dia</SelectItem>
+                  <SelectItem value="semana">Semana</SelectItem>
+                  <SelectItem value="mes">Mês</SelectItem>
                 </SelectContent>
               </Select>
             }
@@ -202,7 +202,7 @@ export default function ConfiguracoesPage() {
             </div>
             <div>
               <p className="font-bold text-slate-900 dark:text-[var(--foreground)]">LifeBook</p>
-              <p className="text-xs text-slate-400">Versão 1.0.0 MVP</p>
+              <p className="text-xs text-slate-400">Versão 1.0.0</p>
             </div>
           </div>
           <Separator className="mb-4 opacity-50" />

@@ -5,6 +5,7 @@ import { useAppStore } from "@/lib/store";
 import { useCategoryMap } from "@/lib/useCategories";
 import { Event } from "@/lib/types";
 import { format, addDays, subDays, parseISO, isToday } from "date-fns";
+import { eventAppliesToDate } from "@/lib/utils";
 import { ptBR } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Calendar, CheckSquare, Target, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
@@ -107,7 +108,7 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
 
   const currentDate = parseISO(selectedDate);
   const dayEvents = events
-    .filter((e) => e.date === selectedDate)
+    .filter((e) => eventAppliesToDate(e, selectedDate))
     .sort((a, b) => a.startTime.localeCompare(b.startTime));
 
   const todayFlag = isToday(currentDate);
