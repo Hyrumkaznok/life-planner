@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useAppStore } from "@/lib/store";
 import { DiaryMood } from "@/lib/types";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { format, parseISO, isToday, isYesterday } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Trash2, BookOpen } from "lucide-react";
+import { Trash2, BookOpen, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -39,14 +39,21 @@ export default function DiarioPage() {
   const [deletingDate, setDeletingDate] = useState<string | null>(null);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Sync se a entrada de hoje mudar externamente
   useEffect(() => {
     setMood(todayEntry?.mood ?? "bem");
     setContent(todayEntry?.content ?? "");
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [today]);
 
-  // Auto-save com debounce
+  const handleSave = useCallback(() => {
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveDiaryEntry(today, mood, content);
+    setSaved(true);
+    toast.success("Diário salvo!");
+    setTimeout(() => setSaved(false), 2000);
+  }, [today, mood, content, saveDiaryEntry]);
+
+  // Auto-save com debounce ao digitar
   useEffect(() => {
     if (!content.trim() && !todayEntry) return;
     if (saveTimer.current) clearTimeout(saveTimer.current);
@@ -62,11 +69,18 @@ export default function DiarioPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content, mood]);
 
+  // Enter salva · Shift+Enter insere nova linha
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSave();
+    }
+  };
+
   const pastEntries = diaryEntries
     .filter((e) => e.date !== today)
     .sort((a, b) => b.date.localeCompare(a.date));
 
-  const handleDelete = (date: string) => setDeletingDate(date);
   const confirmDelete = () => {
     if (deletingDate) {
       deleteDiaryEntry(deletingDate);
@@ -77,14 +91,7 @@ export default function DiarioPage() {
 
   return (
     <div className="min-h-full">
-      <PageHeader title="Diário" subtitle="Seus pensamentos e sentimentos do dia">
-        <span className={cn(
-          "text-xs font-medium px-2.5 py-1 rounded-lg transition-all duration-300",
-          saved ? "text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 dark:text-emerald-400" : "text-transparent"
-        )}>
-          Salvo
-        </span>
-      </PageHeader>
+      <PageHeader title="Diário" subtitle="Seus pensamentos e sentimentos do dia" />
 
       <div className="p-4 sm:p-7 max-w-2xl mx-auto space-y-8">
 
@@ -121,13 +128,33 @@ export default function DiarioPage() {
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Como foi o seu dia? Escreva livremente..."
+              onKeyDown={handleKeyDown}
+              placeholder="Como foi o seu dia? Escreva livremente... (Enter para salvar, Shift+Enter para nova linha)"
               rows={8}
               className="w-full bg-white dark:bg-[var(--card)] border border-slate-200 dark:border-[var(--border)] rounded-2xl px-4 py-3.5 text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-400/40 dark:focus:ring-violet-500/30 resize-none leading-relaxed transition-colors"
             />
             <div className="absolute bottom-3 right-3 text-[10px] text-slate-300 dark:text-slate-600 select-none">
               {content.length} chars
             </div>
+          </div>
+
+          {/* Botão salvar */}
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-slate-300 dark:text-slate-600">
+              Shift+Enter para nova linha
+            </span>
+            <button
+              onClick={handleSave}
+              className={cn(
+                "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all",
+                saved
+                  ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30"
+                  : "bg-violet-600 hover:bg-violet-700 text-white shadow-sm"
+              )}
+            >
+              <Save className="w-3.5 h-3.5" />
+              {saved ? "Salvo!" : "Salvar"}
+            </button>
           </div>
         </div>
 
@@ -174,7 +201,7 @@ export default function DiarioPage() {
                         )}
                       </div>
                       <button
-                        onClick={() => handleDelete(entry.date)}
+                        onClick={() => setDeletingDate(entry.date)}
                         className="shrink-0 p-1.5 rounded-lg text-slate-300 dark:text-slate-600 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors md:opacity-0 md:group-hover:opacity-100"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -187,7 +214,6 @@ export default function DiarioPage() {
           </div>
         )}
 
-        {/* Estado vazio (sem entradas anteriores e sem conteúdo hoje) */}
         {pastEntries.length === 0 && !todayEntry && (
           <div className="text-center py-12 text-slate-400">
             <BookOpen className="w-10 h-10 mx-auto mb-3 opacity-20" />
