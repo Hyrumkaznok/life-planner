@@ -71,3 +71,13 @@ export interface AppSettings {
   weekStartsOnMonday: boolean;
   defaultView: "dia" | "semana" | "mes";
 }
+
+export type DiaryMood = "otimo" | "bem" | "neutro" | "mal" | "pessimo";
+
+export interface DiaryEntry {
+  id: string;
+  date: string; // yyyy-MM-dd
+  mood: DiaryMood;
+  content: string;
+  updatedAt: string;
+}

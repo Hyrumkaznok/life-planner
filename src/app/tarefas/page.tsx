@@ -17,13 +17,13 @@ import { cn } from "@/lib/utils";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 const PRIORITY_CONFIG: Record<TaskPriority, { label: string; dot: string; badge: string }> = {
-  high:   { label: "Alta",  dot: "bg-red-500",   badge: "text-red-600 bg-red-50 border border-red-100" },
-  medium: { label: "Média", dot: "bg-amber-400",  badge: "text-amber-600 bg-amber-50 border border-amber-100" },
-  low:    { label: "Baixa", dot: "bg-emerald-400",badge: "text-emerald-600 bg-emerald-50 border border-emerald-100" },
+  high:   { label: "Alta",  dot: "bg-red-500",    badge: "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/15 border border-red-100 dark:border-red-500/30" },
+  medium: { label: "Média", dot: "bg-amber-400",  badge: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/15 border border-amber-100 dark:border-amber-500/30" },
+  low:    { label: "Baixa", dot: "bg-emerald-400",badge: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/30" },
 };
 
 const STATUS_CONFIG: Record<TaskStatus, { label: string; icon: React.ReactNode }> = {
-  pending:     { label: "Pendente",     icon: <Circle className="w-4 h-4 text-slate-300" /> },
+  pending:     { label: "Pendente",     icon: <Circle className="w-4 h-4 text-slate-300 dark:text-slate-500" /> },
   in_progress: { label: "Em andamento", icon: <AlertCircle className="w-4 h-4 text-amber-400" /> },
   completed:   { label: "Concluída",    icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" /> },
 };
@@ -150,12 +150,12 @@ function TaskCard({ task, today, categoryMap, onToggle, onEdit, onDelete, index 
           {s.icon}
         </button>
         <div className="flex-1 min-w-0">
-          <p className={cn("text-sm font-semibold text-slate-800",
-            task.status === "completed" && "line-through text-slate-400")}>
+          <p className={cn("text-sm font-semibold text-slate-800 dark:text-slate-100",
+            task.status === "completed" && "line-through text-slate-400 dark:text-slate-500")}>
             {task.title}
           </p>
           {task.description && (
-            <p className="text-xs text-slate-400 mt-0.5 truncate">{task.description}</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">{task.description}</p>
           )}
           <div className="flex flex-wrap items-center gap-1.5 mt-2">
             <span className="text-[10px] px-2 py-0.5 rounded-full font-medium"
@@ -201,8 +201,8 @@ function TaskGroup({ title, items, color, today, categoryMap, onToggle, onEdit, 
     <div>
       <div className="flex items-center gap-2 mb-3">
         <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-        <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">{title}</h3>
-        <span className="text-xs text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-full">{items.length}</span>
+        <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{title}</h3>
+        <span className="text-xs text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-full">{items.length}</span>
       </div>
       <div className="space-y-2">
         {items.map((task, i) => (

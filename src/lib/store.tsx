@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
-import { Event, Task, Habit, AppSettings, Category, UserProfile } from "./types";
+import { Event, Task, Habit, AppSettings, Category, UserProfile, DiaryEntry, DiaryMood } from "./types";
 import { MOCK_EVENTS, MOCK_TASKS, MOCK_HABITS } from "./mock-data";
 import { format } from "date-fns";
 
@@ -93,6 +93,7 @@ interface AppStore {
   events: Event[];
   tasks: Task[];
   habits: Habit[];
+  diaryEntries: DiaryEntry[];
   settings: AppSettings;
   customCategories: Category[];
   userProfile: UserProfile;
@@ -115,6 +116,8 @@ interface AppStore {
   addCustomCategory: (category: Omit<Category, "id" | "bgColor" | "textColor" | "custom">) => void;
   deleteCustomCategory: (id: string) => void;
   updateUserProfile: (profile: Partial<UserProfile>) => void;
+  saveDiaryEntry: (date: string, mood: DiaryMood, content: string) => void;
+  deleteDiaryEntry: (date: string) => void;
 }
 
 const DEFAULT_SETTINGS: AppSettings = { theme: "light", weekStartsOnMonday: true, defaultView: "semana" };
@@ -128,6 +131,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [events, setEvents]                   = useState<Event[]>(() => migrateEvents(load("lp_events", MOCK_EVENTS)));
   const [tasks, setTasks]                     = useState<Task[]>(() => migrateTasks(load("lp_tasks", MOCK_TASKS)));
   const [habits, setHabits]                   = useState<Habit[]>(() => migrateHabits(load("lp_habits", MOCK_HABITS)));
+  const [diaryEntries, setDiaryEntries]       = useState<DiaryEntry[]>(() => load("lp_diary", []));
   const [customCategories, setCustomCategories] = useState<Category[]>(() => load("lp_categories", []));
   const [userProfile, setUserProfile]         = useState<UserProfile>(() => load("lp_profile", DEFAULT_PROFILE));
   const [settings, setSettings]               = useState<AppSettings>(() => migrateSettings(load("lp_settings", DEFAULT_SETTINGS)));
@@ -138,6 +142,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { save("lp_events", events); }, [events]);
   useEffect(() => { save("lp_tasks", tasks); }, [tasks]);
   useEffect(() => { save("lp_habits", habits); }, [habits]);
+  useEffect(() => { save("lp_diary", diaryEntries); }, [diaryEntries]);
   useEffect(() => { save("lp_categories", customCategories); }, [customCategories]);
   useEffect(() => { save("lp_profile", userProfile); }, [userProfile]);
   useEffect(() => { save("lp_settings", settings); }, [settings]);
@@ -219,15 +224,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setUserProfile((prev) => ({ ...prev, ...updates }));
   }, []);
 
+  const saveDiaryEntry = useCallback((date: string, mood: DiaryMood, content: string) => {
+    const now = format(new Date(), "yyyy-MM-dd'T'HH:mm:ss");
+    setDiaryEntries((prev) => {
+      const existing = prev.find((e) => e.date === date);
+      if (existing) {
+        return prev.map((e) => e.date === date ? { ...e, mood, content, updatedAt: now } : e);
+      }
+      return [...prev, { id: `d${Date.now()}`, date, mood, content, updatedAt: now }];
+    });
+  }, []);
+
+  const deleteDiaryEntry = useCallback((date: string) => {
+    setDiaryEntries((prev) => prev.filter((e) => e.date !== date));
+  }, []);
+
   return (
     <AppContext.Provider value={{
-      events, tasks, habits, settings, customCategories, userProfile,
+      events, tasks, habits, diaryEntries, settings, customCategories, userProfile,
       selectedDate, calendarView,
       setSelectedDate, setCalendarView,
       addEvent, updateEvent, deleteEvent, toggleEventComplete,
       addTask, updateTask, deleteTask,
       addHabit, updateHabit, deleteHabit, toggleHabitComplete,
       updateSettings, addCustomCategory, deleteCustomCategory, updateUserProfile,
+      saveDiaryEntry, deleteDiaryEntry,
     }}>
       {children}
     </AppContext.Provider>

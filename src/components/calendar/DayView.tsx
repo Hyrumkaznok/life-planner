@@ -206,7 +206,7 @@ export function DayView({ onEventClick, onCreateEvent, onCreateTask, onCreateHab
         <div className="w-16 shrink-0 border-r border-slate-50">
           {HOURS.map((hour) => (
             <div key={hour} className="h-16 flex items-start justify-end pr-2.5 pt-1">
-              <span className="text-[10px] text-slate-300 font-medium">{hour.toString().padStart(2, "0")}h</span>
+              <span className="text-[10px] text-slate-400 font-medium">{hour.toString().padStart(2, "0")}h</span>
             </div>
           ))}
         </div>

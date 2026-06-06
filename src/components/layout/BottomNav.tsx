@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Calendar, CheckSquare, Target, BarChart3, Settings, User, LogOut, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Calendar, CheckSquare, Target, BarChart3, Settings, User, LogOut, ChevronRight, BookOpen } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/lib/auth';
 
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
 ];
 
 const MORE_ITEMS = [
+  { href: '/diario',       icon: BookOpen, label: 'Diário'         },
   { href: '/estatisticas', icon: BarChart3, label: 'Estatísticas'  },
   { href: '/configuracoes', icon: Settings, label: 'Configurações' },
   { href: '/perfil',       icon: User,     label: 'Meu Perfil'     },

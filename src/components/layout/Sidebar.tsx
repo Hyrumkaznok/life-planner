@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Calendar, CheckSquare,
-  Target, BarChart3, Settings, LogOut,
+  Target, BarChart3, Settings, LogOut, BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAppStore } from "@/lib/store";
@@ -15,6 +15,7 @@ const navItems = [
   { href: "/calendario",   icon: Calendar,        label: "Calendário"   },
   { href: "/tarefas",      icon: CheckSquare,     label: "Tarefas"      },
   { href: "/habitos",      icon: Target,          label: "Hábitos"      },
+  { href: "/diario",       icon: BookOpen,        label: "Diário"       },
   { href: "/estatisticas", icon: BarChart3,       label: "Estatísticas" },
   { href: "/configuracoes",icon: Settings,        label: "Configurações" },
 ];
